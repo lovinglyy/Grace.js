@@ -1,5 +1,5 @@
 /*
-	Moderation commands.
+	Utilities commands.
 */
 const dp = require('./dp');
 
