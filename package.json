@@ -1,0 +1,25 @@
+{
+  "name": "Grace.js",
+  "version": "0.1.3",
+  "description": "Discord.js bot in active development.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "lovinglyy",
+  "license": "MPL-2.0",
+  "repository": {
+	"type" : "git",
+	"url" : "https://github.com/lovinglyy/Grace.js"
+  },
+  "keywords": [
+    "grace",
+    "node",
+    "discord",
+	"bot",
+	"redis"
+  ],
+  "dependencies": {
+    "discord.js": "^11.4.2"
+  }
+}
