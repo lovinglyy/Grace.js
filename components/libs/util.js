@@ -159,7 +159,6 @@ async function youtubeSearch(google, youtubeAPI, search) {
     return res.data;
   })
   .catch(error => {
-    console.log(error);
     return false;
   });
 }

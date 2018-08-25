@@ -1,6 +1,6 @@
 {
   "name": "Grace.js",
-  "version": "0.1.3",
+  "version": "0.3.0",
   "description": "Discord.js bot in active development.",
   "main": "index.js",
   "scripts": {

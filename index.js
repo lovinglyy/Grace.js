@@ -2,7 +2,6 @@ const Discord = require('discord.js');
 const redis = require('redis');
 const components = require('./components/');
 const config = require('./config');
-const {google} = require('googleapis');
 
 class Grace {
   constructor(options) {
