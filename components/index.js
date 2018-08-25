@@ -1,3 +1,4 @@
-const events = require('./clientEvents');
+const events = require('./core/clientEvents');
+const redisEvents = require('./core/redisClientEvents');
 
-module.exports = {events};
+module.exports = { events, redisEvents };

@@ -1,6 +1,6 @@
 /*
-	Utilities commands.
+  Utilities commands.
 */
 const dp = require('./dp');
 
-module.exports = {dp};
+module.exports = { dp };

@@ -9,17 +9,24 @@
   "author": "lovinglyy",
   "license": "MPL-2.0",
   "repository": {
-	"type" : "git",
-	"url" : "https://github.com/lovinglyy/Grace.js"
+    "type": "git",
+    "url": "https://github.com/lovinglyy/Grace.js"
   },
   "keywords": [
     "grace",
     "node",
     "discord",
-	"bot",
-	"redis"
+    "bot",
+    "redis"
   ],
   "dependencies": {
-    "discord.js": "^11.4.2"
+    "discord.js": "^11.4.2",
+    "googleapis": "^33.0.0",
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.4.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
   }
 }
