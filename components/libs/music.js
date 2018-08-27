@@ -1,56 +1,52 @@
-'use strict';
-const {google} = require( 'googleapis' );
-const {promisify} = require( 'util' );
+
+const { google } = require('googleapis');
+const { promisify } = require('util');
 
 async function searchYoutubeSong(msg, youtubeAPI, search) {
-  const youtube = google.youtube({  version: 'v3',  auth: youtubeAPI });
+  const youtube = google.youtube({ version: 'v3', auth: youtubeAPI });
   const song = await youtube.search.list({
-      part: 'id,snippet',
-      q: search,
-      maxResults: 1
+    part: 'id,snippet',
+    q: search,
+    maxResults: 1,
   })
-  .then(res => {
-    return res.data;
-  })
-  .catch(error => {
-    throw new Error("Something ocurred with the searchYoutubeSong function. Error: " + error);
-  });
+    .then(res => res.data)
+    .catch((error) => {
+      throw new Error(`Something ocurred with the searchYoutubeSong function. Error: ${error}`);
+    });
 
-  if (!song) return msg.reply( 'something failed when trying to connect to youtube!' );
-  if ( song.items && song.items.length > 0 ) {
+  if (!song) return msg.reply('something failed when trying to connect to youtube!');
+  if (song.items && song.items.length > 0) {
     return [song.items[0].id.videoId, song.items[0].snippet.title];
-  } else {
-    return false;
   }
+  return false;
 }
 
 async function getUserPlaylist(userID, redisClient) {
-  const hgetAsync = promisify( redisClient.hget ).bind( redisClient );
-  let userPlaylist = await hgetAsync( userID, "userPlaylist" );
-  if ( !userPlaylist ) userPlaylist = '';
+  const hgetAsync = promisify(redisClient.hget).bind(redisClient);
+  let userPlaylist = await hgetAsync(userID, 'userPlaylist');
+  if (!userPlaylist) userPlaylist = '';
   return userPlaylist;
 }
 
 function checkForSomeoneInVC(members) {
-  function memberCheck( member ) {
+  function memberCheck(member) {
     return member.user.bot === false && member.deaf === false;
   }
-  const filteredMembers = members.filter( memberCheck );
-  if ( filteredMembers && filteredMembers.size > 0 ) {
+  const filteredMembers = members.filter(memberCheck);
+  if (filteredMembers && filteredMembers.size > 0) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
 
 async function addSongToQueue(guildID, song, songTitle, redisClient, msg) {
-  const hgetAsync = promisify( redisClient.hget ).bind( redisClient );
-  let guildPlaylist = await hgetAsync( guildID, 'guildPlaylist' );
-  if ( !guildPlaylist ) guildPlaylist = '';
-  if ( guildPlaylist.indexOf( song ) !== -1 ) return msg.reply( 'that song is already in the playlist.' );
-  if ( guildPlaylist.length / 11 >= 15 ) return msg.reply( 'the guild playlist is full!' );
-  redisClient.hset( guildID, 'guildPlaylist', guildPlaylist + song );
-  msg.channel.send( `Song **${songTitle}** added to the song queue!` );
+  const hgetAsync = promisify(redisClient.hget).bind(redisClient);
+  let guildPlaylist = await hgetAsync(guildID, 'guildPlaylist');
+  if (!guildPlaylist) guildPlaylist = '';
+  if (guildPlaylist.indexOf(song) !== -1) return msg.reply('that song is already in the playlist.');
+  if (guildPlaylist.length / 11 >= 15) return msg.reply('the guild playlist is full!');
+  redisClient.hset(guildID, 'guildPlaylist', guildPlaylist + song);
+  msg.channel.send(`Song **${songTitle}** added to the song queue!`);
 }
 
 /**
@@ -61,10 +57,10 @@ async function addSongToQueue(guildID, song, songTitle, redisClient, msg) {
  */
 function getPlaylistLength(playlist) {
   let songCount = 0;
-  let playlistSongPos = playlist.indexOf( '!SongID' );
-  while ( playlistSongPos !== -1 ) {
+  let playlistSongPos = playlist.indexOf('!SongID');
+  while (playlistSongPos !== -1) {
     songCount++;
-    playlistSongPos = playlist.indexOf( '!SongID', playlistSongPos + 1 );
+    playlistSongPos = playlist.indexOf('!SongID', playlistSongPos + 1);
   }
   return songCount;
 }
@@ -74,9 +70,11 @@ function getPlaylistLength(playlist) {
 * user song playlist.
 */
 function findSongByIndex(playlist, songIndex) {
-  let songs = playlist.split( '!SongID' );
+  const songs = playlist.split('!SongID');
   songs.pop();
-  return songs[songIndex-1];
+  return songs[songIndex - 1];
 }
 
-module.exports = { searchYoutubeSong, findSongByIndex, getUserPlaylist, checkForSomeoneInVC, addSongToQueue, getPlaylistLength };
+module.exports = {
+  searchYoutubeSong, findSongByIndex, getUserPlaylist, checkForSomeoneInVC, addSongToQueue, getPlaylistLength,
+};

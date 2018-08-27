@@ -4,4 +4,6 @@ const myPlaylist = require('./myPlaylist');
 const playlistRemove = require('./playlistRemove');
 const play = require('./play');
 
-module.exports = { playlistAdd, playlistClear, myPlaylist, playlistRemove, play };
+module.exports = {
+  playlistAdd, playlistClear, myPlaylist, playlistRemove, play,
+};

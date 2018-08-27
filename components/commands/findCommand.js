@@ -20,16 +20,21 @@ module.exports = {
     if (CMD_SYNTAX === 'EW' || CMD_SYNTAX === 'EWW' || CMD_SYNTAX === 'EWW') return reactions.ew(msg, argSeparator + CMD_SYNTAX.length);
 
     // Music
-    if (CMD_SYNTAX === 'PLAY') return music.play.cmd(msg, argSeparator + CMD_SYNTAX.length,
-      grace.getRedisClient(), grace.getConfig().youtubeAPI);
+    if (CMD_SYNTAX === 'PLAY') {
+      return music.play.cmd(msg, argSeparator + CMD_SYNTAX.length,
+        grace.getRedisClient(), grace.getConfig().youtubeAPI);
+    }
 
-    if (CMD_SYNTAX === 'PLAYLISTADD' || CMD_SYNTAX === 'PLADD') return music.playlistAdd.cmd(msg, argSeparator + CMD_SYNTAX.length,
-      grace.getRedisClient(), grace.getConfig().youtubeAPI);
+    if (CMD_SYNTAX === 'PLAYLISTADD' || CMD_SYNTAX === 'PLADD') {
+      return music.playlistAdd.cmd(msg, argSeparator + CMD_SYNTAX.length,
+        grace.getRedisClient(), grace.getConfig().youtubeAPI);
+    }
     if (CMD_SYNTAX === 'PLAYLISTCLEAR' || CMD_SYNTAX === 'PLCLEAR') return music.playlistClear.cmd(msg, grace.getRedisClient());
-    if (CMD_SYNTAX === 'MYPLAYLIST' || CMD_SYNTAX === 'PLAYLIST' || CMD_SYNTAX === 'PL')
-      return music.myPlaylist.cmd(msg, grace.getRedisClient());
-    if (CMD_SYNTAX === 'PLAYLISTREMOVE' || CMD_SYNTAX === 'PLREMOVE') return music.playlistRemove.cmd(msg, argSeparator + CMD_SYNTAX.length,
+    if (CMD_SYNTAX === 'MYPLAYLIST' || CMD_SYNTAX === 'PLAYLIST' || CMD_SYNTAX === 'PL') return music.myPlaylist.cmd(msg, grace.getRedisClient());
+    if (CMD_SYNTAX === 'PLAYLISTREMOVE' || CMD_SYNTAX === 'PLREMOVE') {
+      return music.playlistRemove.cmd(msg, argSeparator + CMD_SYNTAX.length,
         grace.getRedisClient());
+    }
 
     // Utilities
     if (CMD_SYNTAX === 'DP') return utilities.dp.cmd(msg, argSeparator + CMD_SYNTAX.length);
