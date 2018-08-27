@@ -149,18 +149,4 @@ function findOneMember(msg, argSeparator, errorReply = true) {
   return possibleMember;
 }
 
-async function youtubeSearch(google, youtubeAPI, search) {
-  const youtube = google.youtube({  version: 'v3',  auth: youtubeAPI });
-  return await youtube.search.list({
-      part: 'id,snippet',
-      q: search
-  })
-  .then(res => {
-    return res.data;
-  })
-  .catch(error => {
-    return false;
-  });
-}
-
-module.exports = { getMember, findOneMember, youtubeSearch  };
+module.exports = { getMember, findOneMember };

@@ -22,7 +22,9 @@
   "dependencies": {
     "discord.js": "^11.4.2",
     "googleapis": "^33.0.0",
-    "redis": "^2.8.0"
+    "node-opus": "^0.3.0",
+    "redis": "^2.8.0",
+    "ytdl-core": "^0.24.0"
   },
   "devDependencies": {
     "eslint": "^5.4.0",

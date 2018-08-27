@@ -1,7 +1,4 @@
-/*
-	This file organize all commands, calling their correct function
-	depending on the user input.
-*/
 const util = require('./util');
+const music = require('./music');
 
-module.exports = { util };
+module.exports = { util, music };
