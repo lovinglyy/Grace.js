@@ -8,6 +8,7 @@ class Grace {
     this.config = options.botConfig;
     this.client = options.client;
     this.redisClient = options.redisClient;
+    this.dailyCD = [];
     this.setup();
   }
 
@@ -19,6 +20,10 @@ class Grace {
 
   getClient() {
     return this.client;
+  }
+
+  getDailyCD() {
+    return this.dailyCD;
   }
 
   getRedisClient() {

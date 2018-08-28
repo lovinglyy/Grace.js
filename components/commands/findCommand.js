@@ -3,11 +3,16 @@ const moderation = require('./moderation/');
 const owner = require('./owner/');
 const utilities = require('./utilities/');
 const music = require('./music/');
+const currency = require('./currency/');
 
 module.exports = {
   findCommand(msg, commandAndArgs, grace, argSeparator) {
     const spacePlace = commandAndArgs.indexOf(' ');
     const CMD_SYNTAX = (spacePlace === -1) ? commandAndArgs : commandAndArgs.substring(0, spacePlace);
+
+    // Currency commands
+    if (CMD_SYNTAX === 'DAILY') return currency.daily.cmd(msg, grace.getDailyCD(), grace.getRedisClient());
+    if (CMD_SYNTAX === 'BANK') return currency.bank.cmd(msg, grace.getRedisClient());
 
     // Reaction commands
     if (CMD_SYNTAX === 'IDC') return reactions.idc(msg, argSeparator + CMD_SYNTAX.length);
@@ -38,6 +43,7 @@ module.exports = {
 
     // Utilities
     if (CMD_SYNTAX === 'DP') return utilities.dp.cmd(msg, argSeparator + CMD_SYNTAX.length);
+    if (CMD_SYNTAX === 'ASK') return utilities.ask.cmd(msg);
 
     // Moderation commands
     if (msg.member.hasPermission('MANAGE_MESSAGES')) { if (CMD_SYNTAX === 'PURGE') return moderation.purge.cmd(msg, argSeparator + CMD_SYNTAX.length); }

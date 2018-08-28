@@ -8,5 +8,5 @@ module.exports = {
     if (!redisClient) return;
     redisClient.hset(msg.author.id, 'userPlaylist', '');
     msg.channel.send('I did clear your playlist! :o');
-  },
+  }
 };

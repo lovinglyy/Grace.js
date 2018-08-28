@@ -1,6 +1,4 @@
-/*
-  Utilities commands.
-*/
 const dp = require('./dp');
+const ask = require('./ask');
 
-module.exports = { dp };
+module.exports = { dp, ask };

@@ -13,5 +13,5 @@ module.exports = {
     return mentionedUser.kick({ reason: kickReason })
       .then(() => msg.channel.send(`${msg.author} kicked ${mentionedUser} from the server! \n**Reason:** *${kickReason}*.`))
       .catch(console.error);
-  },
+  }
 };

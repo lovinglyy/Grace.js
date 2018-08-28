@@ -50,5 +50,5 @@ module.exports = {
       },
     };
     msg.channel.send('Song added to your playlist!', { embed: songEmbed });
-  },
+  }
 };

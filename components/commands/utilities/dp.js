@@ -14,5 +14,5 @@ module.exports = {
     if (!anotherMember) return;
     return msg.channel.send(`${anotherMember.displayName}'s Discord profile picture:`,
       { files: [anotherMember.user.displayAvatarURL.replace('?size=2048', '')], name: 'profile.png' });
-  },
+  }
 };
