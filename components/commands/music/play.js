@@ -64,8 +64,7 @@ module.exports = {
     if (!graceVCInGuild) {
       const joinVC = memberVC.join();
       dispatcher = await joinVC.then((connection) => {
-        const dispatcher = connection.playStream(stream, streamOptions);
-        return dispatcher;
+        return connection.playStream(stream, streamOptions);
       });
     } else if (!(msg.guild.voiceConnection.dispatcher) && msg.guild.me.speaking === false) {
       dispatcher = graceVCInGuild.playStream(stream, streamOptions);
@@ -74,49 +73,44 @@ module.exports = {
       return;
     }
 
-    function dispatcherOnEnd(dispatcher) {
-      dispatcher.on('end', async (reason) => {
-        msg.guild.voiceConnection.speaking = false;
-        if (libs.music.checkForSomeoneInVC(msg.guild.voiceConnection.channel.members) === false) {
-          msg.guild.voiceConnection.disconnect();
+    async function endDispatcher() {
+      msg.guild.voiceConnection.speaking = false;
+      if (libs.music.checkForSomeoneInVC(msg.guild.voiceConnection.channel.members) === false) {
+        if (msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
+        msg.guild.me.voiceChannel.leave();
+        dispatcher.removeListener('end', endDispatcher);
+        redisClient.del(`${msg.guild.id}_queue`);
+      } else {
+        const lpopAsync = promisify(redisClient.lpop).bind(redisClient);
+        let nextSong = await lpopAsync(`${msg.guild.id}_queue`);
+        if (!nextSong) {
+          if (msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
           msg.guild.me.voiceChannel.leave();
-          redisClient.hset(msg.guild.id, 'guildPlaylist', '');
-        } else {
-          const hgetAsync = promisify(redisClient.hget).bind(redisClient);
-          const guildPlaylist = await hgetAsync(msg.guild.id, 'guildPlaylist');
-          if (!guildPlaylist || guildPlaylist.length === 0) {
-            msg.guild.voiceConnection.disconnect();
-            msg.guild.me.voiceChannel.leave();
-            return;
-          }
-
-          redisClient.hset(msg.guild.id, 'guildPlaylist', guildPlaylist.substring(11));
-          const nextSong = guildPlaylist.substring(0, 11);
-
-          let songTitle;
-          const searchResults = await libs.music.searchYoutubeSong(msg, youtubeAPI, nextSong);
-          [_, songTitle] = searchResults;
-
-          const newStream = ytdl(`https://www.youtube.com/watch?v=${nextSong}`, { filter: 'audioonly' });
-          const newDispatcher = msg.guild.voiceConnection.playStream(newStream, streamOptions);
-          msg.channel.send({
-            embed: {
-              title: songTitle,
-              url: `https://www.youtube.com/watch?v=${nextSong}`,
-              color: 11529967,
-              thumbnail: {
-                url: `https://img.youtube.com/vi/${nextSong}/hqdefault.jpg`,
-              },
-              author: {
-                name: 'Song playing now',
-              },
-            },
-          });
-          dispatcherOnEnd(newDispatcher);
+          dispatcher.removeListener('end', endDispatcher);
+          return;
         }
-      });
+        const songTitle = nextSong.substring( 11 );
+        nextSong = nextSong.substring( 0, 12 );
+        const newStream = ytdl(`https://www.youtube.com/watch?v=${nextSong}`, { filter: 'audioonly' });
+        dispatcher = msg.guild.voiceConnection.playStream(newStream, streamOptions);
+        dispatcher.once('end', endDispatcher);
+        msg.channel.send({
+          embed: {
+            title: songTitle,
+            url: `https://www.youtube.com/watch?v=${nextSong}`,
+            color: 11529967,
+            thumbnail: {
+              url: `https://img.youtube.com/vi/${nextSong}/hqdefault.jpg`,
+            },
+            author: {
+              name: 'Song playing now',
+            },
+          },
+        });
+      }
     }
-    dispatcherOnEnd(dispatcher);
+
+    dispatcher.once('end', endDispatcher);
     msg.channel.send({
       embed: {
         title: songTitle,
@@ -130,5 +124,6 @@ module.exports = {
         },
       },
     });
+
   }
 };

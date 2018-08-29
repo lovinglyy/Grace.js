@@ -39,12 +39,10 @@ function checkForSomeoneInVC(members) {
 }
 
 async function addSongToQueue(guildID, song, songTitle, redisClient, msg) {
-  const hgetAsync = promisify(redisClient.hget).bind(redisClient);
-  let guildPlaylist = await hgetAsync(guildID, 'guildPlaylist');
-  if (!guildPlaylist) guildPlaylist = '';
-  if (guildPlaylist.indexOf(song) !== -1) return msg.reply('that song is already in the playlist.');
-  if (guildPlaylist.length / 11 >= 15) return msg.reply('the guild playlist is full!');
-  redisClient.hset(guildID, 'guildPlaylist', guildPlaylist + song);
+  const llenAsync = promisify(redisClient.llen).bind(redisClient);
+  let guildPlaylistLength = await llenAsync(`${guildID}_queue`);
+  if (guildPlaylistLength >= 15) return msg.reply('the guild playlist is full!');
+  redisClient.rpush(`${guildID}_queue`, `${song}${songTitle}`);
   msg.channel.send(`Song **${songTitle}** added to the song queue!`);
 }
 

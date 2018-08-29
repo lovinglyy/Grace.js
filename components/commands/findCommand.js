@@ -21,7 +21,7 @@ module.exports = {
     if (CMD_SYNTAX === 'POSITIVE') return reactions.positive(msg, argSeparator + CMD_SYNTAX.length);
     if (CMD_SYNTAX === 'HUG' || CMD_SYNTAX === 'CUDDLE') return reactions.hug(msg, argSeparator + CMD_SYNTAX.length);
     if (CMD_SYNTAX === 'ANGRY' || CMD_SYNTAX === 'RAGE') return reactions.angry(msg, argSeparator + CMD_SYNTAX.length);
-    if (CMD_SYNTAX === 'CHARM' || CMD_SYNTAX === 'FLIRT') return reactions.charm(msg), argSeparator + CMD_SYNTAX.length;
+    if (CMD_SYNTAX === 'CHARM' || CMD_SYNTAX === 'FLIRT') return reactions.charm(msg, argSeparator + CMD_SYNTAX.length);
     if (CMD_SYNTAX === 'EW' || CMD_SYNTAX === 'EWW' || CMD_SYNTAX === 'EWW') return reactions.ew(msg, argSeparator + CMD_SYNTAX.length);
 
     // Music
@@ -29,6 +29,7 @@ module.exports = {
       return music.play.cmd(msg, argSeparator + CMD_SYNTAX.length,
         grace.getRedisClient(), grace.getConfig().youtubeAPI);
     }
+    if (CMD_SYNTAX === 'QUEUE') return music.queue.cmd(msg, grace.getRedisClient(), argSeparator + CMD_SYNTAX.length);
 
     if (CMD_SYNTAX === 'PLAYLISTADD' || CMD_SYNTAX === 'PLADD') {
       return music.playlistAdd.cmd(msg, argSeparator + CMD_SYNTAX.length,
