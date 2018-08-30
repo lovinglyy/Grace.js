@@ -29,5 +29,5 @@ module.exports = {
     const newPlaylist = userPlaylist.replace(`${song}!SongID`, '');
     redisClient.hset(msg.author.id, 'userPlaylist', newPlaylist);
     msg.channel.send('Song removed from the playlist!');
-  }
+  },
 };

@@ -40,7 +40,7 @@ function checkForSomeoneInVC(members) {
 
 async function addSongToQueue(guildID, song, songTitle, redisClient, msg) {
   const llenAsync = promisify(redisClient.llen).bind(redisClient);
-  let guildPlaylistLength = await llenAsync(`${guildID}_queue`);
+  const guildPlaylistLength = await llenAsync(`${guildID}_queue`);
   if (guildPlaylistLength >= 15) return msg.reply('the guild playlist is full!');
   redisClient.rpush(`${guildID}_queue`, `${song}${songTitle}`);
   msg.channel.send(`Song **${songTitle}** added to the song queue!`);

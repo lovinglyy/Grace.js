@@ -28,11 +28,11 @@ module.exports = {
     const embed = {
       title: `${msg.guild.name}'s song queue:`,
       color: 11529967,
-      "thumbnail": {
-        "url": msg.guild.iconURL
+      thumbnail: {
+        url: msg.guild.iconURL,
       },
       description: formatedSongs.substring(0, 1500),
     };
     msg.channel.send({ embed });
-  }
+  },
 };

@@ -1,5 +1,6 @@
 const { promisify } = require('util');
 const { google } = require('googleapis');
+const Discord = require('discord.js');
 const libs = require('./../../libs/');
 
 module.exports = {
@@ -41,14 +42,13 @@ module.exports = {
     }
 
     redisClient.hset(msg.author.id, 'userPlaylist', `${userPlaylist + songTitle}!SongTitle${songId}!SongID`);
-    const songEmbed = {
-      title: songTitle,
-      color: 11529967,
-      url: `https://www.youtube.com/watch?v=${songId}`,
-      thumbnail: {
-        url: `https://img.youtube.com/vi/${songId}/hqdefault.jpg`,
-      },
-    };
-    msg.channel.send('Song added to your playlist!', { embed: songEmbed });
-  }
+
+    const _ = new Discord.RichEmbed()
+      .setTitle(songTitle)
+      .setURL(`https://www.youtube.com/watch?v=${songId}`)
+      .setColor(11529967)
+      .setThumbnail(`https://img.youtube.com/vi/${songId}/hqdefault.jpg`)
+      .setAuthor('Song playing now');
+    msg.channel.send('Song added to your playlist!', { embed: _ });
+  },
 };

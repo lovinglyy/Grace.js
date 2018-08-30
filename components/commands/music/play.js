@@ -1,5 +1,6 @@
 const { promisify } = require('util');
 const ytdl = require('ytdl-core');
+const Discord = require('discord.js');
 
 const streamOptions = { seek: 0, volume: 1 };
 const opus = require('node-opus');
@@ -63,9 +64,7 @@ module.exports = {
     let dispatcher;
     if (!graceVCInGuild) {
       const joinVC = memberVC.join();
-      dispatcher = await joinVC.then((connection) => {
-        return connection.playStream(stream, streamOptions);
-      });
+      dispatcher = await joinVC.then(connection => connection.playStream(stream, streamOptions));
     } else if (!(msg.guild.voiceConnection.dispatcher) && msg.guild.me.speaking === false) {
       dispatcher = graceVCInGuild.playStream(stream, streamOptions);
     } else {
@@ -89,41 +88,30 @@ module.exports = {
           dispatcher.removeListener('end', endDispatcher);
           return;
         }
-        const songTitle = nextSong.substring( 11 );
-        nextSong = nextSong.substring( 0, 12 );
+        const songTitle = nextSong.substring(11);
+        nextSong = nextSong.substring(0, 12);
         const newStream = ytdl(`https://www.youtube.com/watch?v=${nextSong}`, { filter: 'audioonly' });
         dispatcher = msg.guild.voiceConnection.playStream(newStream, streamOptions);
         dispatcher.once('end', endDispatcher);
-        msg.channel.send({
-          embed: {
-            title: songTitle,
-            url: `https://www.youtube.com/watch?v=${nextSong}`,
-            color: 11529967,
-            thumbnail: {
-              url: `https://img.youtube.com/vi/${nextSong}/hqdefault.jpg`,
-            },
-            author: {
-              name: 'Song playing now',
-            },
-          },
-        });
+
+        const _ = new Discord.RichEmbed()
+          .setTitle(songTitle)
+          .setURL(`https://www.youtube.com/watch?v=${nextSong}`)
+          .setColor(11529967)
+          .setThumbnail(`https://img.youtube.com/vi/${nextSong}/hqdefault.jpg`)
+          .setAuthor('Song playing now');
+
+        msg.channel.send({ embed: _ });
       }
     }
 
     dispatcher.once('end', endDispatcher);
-    msg.channel.send({
-      embed: {
-        title: songTitle,
-        url: `https://www.youtube.com/watch?v=${songId}`,
-        color: 11529967,
-        thumbnail: {
-          url: `https://img.youtube.com/vi/${songId}/hqdefault.jpg`,
-        },
-        author: {
-          name: 'Song playing now',
-        },
-      },
-    });
-
-  }
+    const _ = new Discord.RichEmbed()
+      .setTitle(songTitle)
+      .setURL(`https://www.youtube.com/watch?v=${songId}`)
+      .setColor(11529967)
+      .setThumbnail(`https://img.youtube.com/vi/${songId}/hqdefault.jpg`)
+      .setAuthor('Song playing now');
+    msg.channel.send({ embed: _ });
+  },
 };

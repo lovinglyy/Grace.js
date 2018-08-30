@@ -6,7 +6,7 @@ module.exports = {
 	*/
   async cmd(msg, redisClient) {
     if (!redisClient) return;
-    redisClient.hset(msg.author.id, 'userPlaylist', '');
+    redisClient.del(msg.author.id, 'userPlaylist');
     msg.channel.send('I did clear your playlist! :o');
-  }
+  },
 };

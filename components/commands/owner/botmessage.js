@@ -21,5 +21,5 @@ module.exports = {
       },
     });
     if (msg.guild.me.hasPermission('MANAGE_MESSAGES')) return msg.delete();
-  }
+  },
 };

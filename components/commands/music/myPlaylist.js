@@ -27,5 +27,5 @@ module.exports = {
       description: formatedSongs.substring(0, 1500),
     };
     msg.channel.send('Your playlist!', { embed });
-  }
+  },
 };

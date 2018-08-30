@@ -4,11 +4,13 @@ const owner = require('./owner/');
 const utilities = require('./utilities/');
 const music = require('./music/');
 const currency = require('./currency/');
+const games = require('./games/');
 
 module.exports = {
   findCommand(msg, commandAndArgs, grace, argSeparator) {
     const spacePlace = commandAndArgs.indexOf(' ');
-    const CMD_SYNTAX = (spacePlace === -1) ? commandAndArgs : commandAndArgs.substring(0, spacePlace);
+    const CMD_SYNTAX = (spacePlace === -1)
+      ? commandAndArgs : commandAndArgs.substring(0, spacePlace);
 
     // Currency commands
     if (CMD_SYNTAX === 'DAILY') return currency.daily.cmd(msg, grace.getDailyCD(), grace.getRedisClient());
@@ -40,6 +42,12 @@ module.exports = {
     if (CMD_SYNTAX === 'PLAYLISTREMOVE' || CMD_SYNTAX === 'PLREMOVE') {
       return music.playlistRemove.cmd(msg, argSeparator + CMD_SYNTAX.length,
         grace.getRedisClient());
+    }
+
+    // Games
+    if (CMD_SYNTAX === 'PUBGSTATS') {
+      return games.pubgStats.cmd(msg, argSeparator + CMD_SYNTAX.length,
+        grace.getConfig().pubgAPI);
     }
 
     // Utilities

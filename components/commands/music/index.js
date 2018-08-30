@@ -6,5 +6,5 @@ const play = require('./play');
 const queue = require('./queue');
 
 module.exports = {
-  playlistAdd, playlistClear, myPlaylist, playlistRemove, play, queue
+  playlistAdd, playlistClear, myPlaylist, playlistRemove, play, queue,
 };
