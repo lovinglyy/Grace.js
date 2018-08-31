@@ -17,7 +17,8 @@ class PubgAPI {
       method: 'GET',
       headers: { Authorization: `Bearer ${this.apiKey}`, Accept: 'application/vnd.api+json' },
     });
-    return await search.json();
+    const searchJson = await search.json();
+    return searchJson;
   }
 
   /**
@@ -46,15 +47,21 @@ class PubgAPI {
       ['Squad FPP', search.data.attributes.gameModeStats['squad-fpp']],
     ];
 
+
     const embed = new Discord.RichEmbed()
       .setColor(11529967);
-    for (let i = 0; i < gameModes.length; i++) {
+
+    let info;
+    for (let i = 0; i < gameModes.length; i += 1) {
       if (gameModes[i][1].roundsPlayed !== 0) {
-        embed.addField(gameModes[i][0], `**Wins:** ${gameModes[i][1].wins} / **Losses:** ${gameModes[i][1].losses}
-          **Kills:** ${gameModes[i][1].kills} **HS kills:** ${gameModes[i][1].headshotKills} **Assists:** ${gameModes[i][1].assists} **Daily kills:** ${gameModes[i][1].dailyKills} **Dmg dealt:** ${gameModes[i][1].damageDealt} **Round most kills:** ${gameModes[i][1].roundMostKills} **Rounds played:** ${gameModes[i][1].roundsPlayed}`, true);
+        info = gameModes[i][1];
+        embed.addField(gameModes[i][0], `**Wins:** ${info.wins} / **Losses:** ${info.losses}
+**Kills:** ${info.kills} **HS kills:** ${info.headshotKills} **Assists:** ${info.assists} **Daily kills:** ${info.dailyKills} **Dmg dealt:** ${info.damageDealt}
+**Round most kills:** ${info.roundMostKills} **Rounds played:** ${info.roundsPlayed}`, true);
       }
     }
-    if (!(embed.fields)) embed.setDescription('This user has no data to show in the new season.');
+
+    if (embed.fields.length === 0) embed.setDescription('This user has no data to show in the new season.');
     return embed;
   }
 }

@@ -44,6 +44,7 @@ async function addSongToQueue(guildID, song, songTitle, redisClient, msg) {
   if (guildPlaylistLength >= 15) return msg.reply('the guild playlist is full!');
   redisClient.rpush(`${guildID}_queue`, `${song}${songTitle}`);
   msg.channel.send(`Song **${songTitle}** added to the song queue!`);
+  return true;
 }
 
 /**
@@ -54,10 +55,10 @@ async function addSongToQueue(guildID, song, songTitle, redisClient, msg) {
  */
 function getPlaylistLength(playlist) {
   let songCount = 0;
-  let playlistSongPos = playlist.indexOf('!SongID');
+  let playlistSongPos = playlist.indexOf('!SID');
   while (playlistSongPos !== -1) {
-    songCount++;
-    playlistSongPos = playlist.indexOf('!SongID', playlistSongPos + 1);
+    songCount += 1;
+    playlistSongPos = playlist.indexOf('!SID', playlistSongPos + 1);
   }
   return songCount;
 }
@@ -67,11 +68,16 @@ function getPlaylistLength(playlist) {
 * user song playlist.
 */
 function findSongByIndex(playlist, songIndex) {
-  const songs = playlist.split('!SongID');
+  const songs = playlist.split('!SID');
   songs.pop();
   return songs[songIndex - 1];
 }
 
 module.exports = {
-  searchYoutubeSong, findSongByIndex, getUserPlaylist, checkForSomeoneInVC, addSongToQueue, getPlaylistLength,
+  searchYoutubeSong,
+  findSongByIndex,
+  getUserPlaylist,
+  checkForSomeoneInVC,
+  addSongToQueue,
+  getPlaylistLength,
 };

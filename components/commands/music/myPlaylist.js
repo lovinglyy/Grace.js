@@ -14,10 +14,10 @@ module.exports = {
     if (!userPlaylist || userPlaylist.length < 1) return msg.reply('you don\'t have a playlist!');
 
     let formatedSongs = '';
-    const userSongs = userPlaylist.split('!SongID');
+    const userSongs = userPlaylist.split('!SID');
     for (let i = 0; i < userSongs.length - 1; i++) {
       if (!userSongs[i]) continue;
-      const songTitle = userSongs[i].substring(0, userSongs[i].indexOf('!SongTitle'));
+      const songTitle = userSongs[i].substring(0, userSongs[i].indexOf('!ST'));
       if (songTitle) formatedSongs += `[**${i + 1}**] ${songTitle}\n`;
     }
 

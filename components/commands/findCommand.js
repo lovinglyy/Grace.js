@@ -13,7 +13,7 @@ module.exports = {
       ? commandAndArgs : commandAndArgs.substring(0, spacePlace);
 
     // Currency commands
-    if (CMD_SYNTAX === 'DAILY') return currency.daily.cmd(msg, grace.getDailyCD(), grace.getRedisClient());
+    if (CMD_SYNTAX === 'DAILY') return currency.daily.cmd(msg, grace.getCooldown('daily'), grace.getRedisClient());
     if (CMD_SYNTAX === 'BANK') return currency.bank.cmd(msg, grace.getRedisClient());
 
     // Reaction commands
@@ -47,7 +47,7 @@ module.exports = {
     // Games
     if (CMD_SYNTAX === 'PUBGSTATS') {
       return games.pubgStats.cmd(msg, argSeparator + CMD_SYNTAX.length,
-        grace.getConfig().pubgAPI);
+        grace.getConfig().pubgAPI, grace.getCooldown('pubg'));
     }
 
     // Utilities

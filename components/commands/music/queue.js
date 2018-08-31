@@ -1,4 +1,5 @@
 const { promisify } = require('util');
+const Discord = require('discord.js');
 
 module.exports = {
   /**
@@ -25,14 +26,11 @@ module.exports = {
       if (songTitle) formatedSongs += `**[${i + 1}]** ${songTitle}\n`;
     }
 
-    const embed = {
-      title: `${msg.guild.name}'s song queue:`,
-      color: 11529967,
-      thumbnail: {
-        url: msg.guild.iconURL,
-      },
-      description: formatedSongs.substring(0, 1500),
-    };
+    const embed = new Discord.RichEmbed()
+      .setTitle(`${msg.guild.name}'s song queue:`)
+      .setDescription(formatedSongs.substring(0, 1500))
+      .setColor(11529967)
+      .setThumbnail(msg.guild.iconURL);
     msg.channel.send({ embed });
   },
 };

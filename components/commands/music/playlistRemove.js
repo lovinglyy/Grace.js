@@ -21,12 +21,12 @@ module.exports = {
     const userPlaylist = await hgetAsync(msg.author.id, 'userPlaylist');
     if (!userPlaylist) return msg.reply('you don\'t have a playlist!');
 
-    if (userPlaylist.split('!SongID').length - 1 < removeIndex) return msg.reply('invalid song number specified.');
+    if (userPlaylist.split('!SID').length - 1 < removeIndex) return msg.reply('invalid song number specified.');
 
     const song = libs.music.findSongByIndex(userPlaylist, removeIndex);
     if (!song) return msg.reply('that song number isn\'t in your playlist.');
 
-    const newPlaylist = userPlaylist.replace(`${song}!SongID`, '');
+    const newPlaylist = userPlaylist.replace(`${song}!SID`, '');
     redisClient.hset(msg.author.id, 'userPlaylist', newPlaylist);
     msg.channel.send('Song removed from the playlist!');
   },

@@ -9,6 +9,7 @@ class Grace {
     this.client = options.client;
     this.redisClient = options.redisClient;
     this.dailyCD = [];
+    this.pubgCD = [];
     this.setup();
   }
 
@@ -22,8 +23,12 @@ class Grace {
     return this.client;
   }
 
-  getDailyCD() {
-    return this.dailyCD;
+  getCooldown(cd) {
+    let cooldownArray;
+    if (cd === 'daily') cooldownArray = this.dailyCD;
+    if (cd === 'pubg') cooldownArray = this.pubgCD;
+    if (!cooldownArray) return new Error('Couldn\'t find a specified cooldown.');
+    return cooldownArray;
   }
 
   getRedisClient() {

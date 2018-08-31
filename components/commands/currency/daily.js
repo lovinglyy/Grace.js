@@ -5,10 +5,19 @@ module.exports = {
   async cmd(msg, dailyCD, redisClient) {
     if (!redisClient) return;
     const authorID = msg.author.id;
-    const searchUser = dailyCD.find(element => (authorID === element[0]));
+    let elemIndex = -1;
+    const searchUser = dailyCD.find((element) => {
+      elemIndex += 1;
+      return (authorID === element[0]);
+    });
     if (searchUser) {
-      if (Date.now() < searchUser[1]) return msg.reply('you already got your dailies today, huh!');
+      if (Date.now() >= searchUser[1]) {
+        dailyCD.splice(elemIndex, 1);
+      } else {
+        return msg.reply('you already got your dailies today, huh!');
+      }
     }
+
     const tomorrow = new Date(Date.now());
     tomorrow.setDate(tomorrow.getDate() + 1);
     dailyCD.push([authorID, tomorrow.getTime()]);

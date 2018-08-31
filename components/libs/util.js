@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 /**
   * From https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
   */
@@ -43,39 +45,11 @@ function compareStrings(str1, str2) {
   if (greaterLength > 16) return 0;
   let equalChars = 0;
 
-  for (let i = 0; i < smallerLength + 1; i++) { if (str1[i] === str2[i] && str1[i] !== ' ' && str2[i] !== ' ') equalChars++; }
+  let i;
+  for (i = 0; i < smallerLength + 1; i += 1) {
+    if (str1[i] === str2[i] && str1[i] !== ' ' && str2[i] !== ' ') equalChars += 1;
+  }
   return equalChars * 2 / (str1.length + str2.length);
-}
-
-/**
- * Returns an approximate value about how one string is comparable
- * to another, by comparing random chars in the string.
- * It's parameters are the same as the normal compareStrings.
- * @returns {number} A imprecise number of how equal the strings are,
- * for small strings, it will repeat sufficient times to get a more precise
- * result.
- */
-function randomStringCompare(str1, str2) {
-  if (str1[0] !== str2[0]) return 0;
-
-  let greaterLength = str1.length;
-  let smallerLength = str2.length;
-
-  if (str2.length > greaterLength) {
-    greaterLength = str2.length;
-    smallerLength = str1.length;
-  }
-
-  if (str1 === str2) return 1;
-
-  if (greaterLength > 25 || str1 !== str2) return 0;
-  let equalChars = 0;
-
-  for (let i = 0; i < ~~(smallerLength / 2); i++) {
-    const rndChar = ~~(Math.random() * smallerLength - 1);
-    if (str1[rndChar] === str2[rndChar] && str1[rndChar + 1] === str2[rndChar + 1]) equalChars += 2;
-  }
-  return equalChars * 2 / ~~((str1.length + str2.length));
 }
 
 /**
@@ -83,7 +57,8 @@ function randomStringCompare(str1, str2) {
  * First it will see if the username match, then if the displayName does.
  * After that it stores the member displayName in a array with a similiarity
  * value between the member that is current iterating and the one that is being searched.
- * For performance, it doesn't do one iteration for usernames, another for display names and another to
+ * For performance, it doesn't do one iteration for usernames,
+ * another for display names and another to
  * check similarity, it's only one so it's not certain about which one will be found first.
  * @param {string} search - A string that we will search for a member in it.
  * @param {string} msg Need to be a Discord message, it's used to send outputs for the user and
@@ -92,7 +67,6 @@ function randomStringCompare(str1, str2) {
  * @returns {object|boolean} Return the Discord Member found or a false value.
  */
 function getMember(search, msg, errorReply) {
-  search = search.toUpperCase(); // case insensitive
   const similarMembers = [];
 
   if (msg.guild.members.get(search)) return msg.guild.members.get(search);
@@ -103,37 +77,36 @@ function getMember(search, msg, errorReply) {
   }
 
   const usernameSearch = msg.guild.members.first(55).find((curMember) => {
-    const displayNameUpperCase = curMember.displayName.toUpperCase();
-
-    if (`${curMember.user.username.toUpperCase()}#${curMember.user.discriminator}` === search) return true;
-    if (displayNameUpperCase === search) return true;
-
-    const namesSimilarity = compareStrings(displayNameUpperCase, search);
+    const displayNameUpper = curMember.displayName.toUpperCase();
+    const memberUsername = `${curMember.user.username}#${curMember.user.discriminator}`;
+    const namesSimilarity = compareStrings(displayNameUpper, search);
     if (namesSimilarity > 0.32) {
-      similarMembers.push([namesSimilarity, `${curMember.displayName} (${curMember.user.username}#${curMember.user.discriminator})`]);
+      similarMembers.push([namesSimilarity, `${curMember.displayName} (${memberUsername})`]);
     }
-  }, search);
-  if (!usernameSearch) {
-    similarMembers.sort((a, b) => b[0] - a[0]);
+    return (memberUsername.toUpperCase() === search || displayNameUpper === search);
+  });
 
-    let fSimilarMembers = '';
-    for (let i = 0; i < 6; i++) { if (similarMembers[i]) fSimilarMembers += `${similarMembers[i][1]}\n`; }
+  if (usernameSearch) return usernameSearch;
 
-    let embed = null;
-    if (fSimilarMembers) {
-      embed = {
-        description: `There are some members with a similar name: \`\`\`${fSimilarMembers}\`\`\``,
-        color: 11529967,
-        thumbnail: {
-          url: msg.guild.me.user.displayAvatarURL,
-        },
-      };
-    }
-
-    if (errorReply) msg.channel.send(`${msg.author}, sorry but I couldn't find the specified member :c`, { embed });
+  if (similarMembers.length === 0) {
+    if (errorReply) msg.channel.send(`${msg.author}, sorry but I couldn't find the specified member :c`);
     return false;
   }
-  return usernameSearch;
+
+  similarMembers.sort((a, b) => b[0] - a[0]);
+
+  let fSimilarMembers = '';
+  for (let i = 0; i < 6; i += 1) {
+    if (similarMembers[i]) fSimilarMembers += `${similarMembers[i][1]}\n`;
+  }
+
+  const embed = new Discord.RichEmbed()
+    .setDescription(`There are some members with a similar name: \`\`\`${fSimilarMembers}\`\`\``)
+    .setColor(11529967)
+    .setThumbnail(msg.guild.me.user.displayAvatarURL);
+
+  if (errorReply) msg.channel.send(`${msg.author}, sorry but I couldn't find the specified member :c`, { embed });
+  return false;
 }
 
 /**
@@ -151,7 +124,7 @@ function findOneMember(msg, argSeparator, errorReply = true) {
   if (!possibleMember) {
     if (argSeparator === -1) return msg.reply('please mention a user or type a username/display name ^^');
     const singleArgument = msg.content.substring(argSeparator);
-    possibleMember = getMember(singleArgument, msg, errorReply);
+    possibleMember = getMember(singleArgument.toUpperCase(), msg, errorReply);
     if (!possibleMember) return false;
   }
   return possibleMember;
