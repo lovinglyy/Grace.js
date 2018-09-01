@@ -1,5 +1,8 @@
 const { google } = require('googleapis');
+const { MessageEmbed } = require('discord.js');
+const ytdl = require('ytdl-core');
 const { promisify } = require('util');
+const Grace = require('./../../');
 
 async function searchYoutubeSong(msg, youtubeAPI, search) {
   const youtube = google.youtube({ version: 'v3', auth: youtubeAPI });
@@ -73,6 +76,47 @@ function findSongByIndex(playlist, songIndex) {
   return songs[songIndex - 1];
 }
 
+
+async function ytdlAndPlay(songID, connection) {
+  const stream = ytdl(`https://www.youtube.com/watch?v=${songID}`, { filter: 'audioonly' });
+  const dispatcher = connection.play(stream, { type: 'webm/opus' });
+  return dispatcher;
+}
+
+async function playNextQueueSong(guildID, channel, redisClient) {
+  const guild = Grace.grace.getClient().guilds.resolve(guildID);
+  if (!guild || !guild.voiceConnection) return;
+
+  if (!checkForSomeoneInVC(guild.voiceConnection.channel.members)) {
+    guild.voiceConnection.disconnect();
+    guild.me.voice.channel.leave();
+    redisClient.del(`${guild.id}_queue`);
+    return;
+  }
+  const lpopAsync = promisify(redisClient.lpop).bind(redisClient);
+  let nextSong = await lpopAsync(`${guild.id}_queue`);
+  if (!nextSong) {
+    guild.voiceConnection.disconnect();
+    guild.me.voice.channel.leave();
+    return;
+  }
+  const newSongTitle = nextSong.substring(11);
+  nextSong = nextSong.substring(0, 12);
+  const dispatcher = ytdlAndPlay(nextSong, guild.voiceConnection);
+  dispatcher.once('end', () => {
+    playNextQueueSong(guildID, channel, redisClient);
+  });
+
+  const embed = new MessageEmbed()
+    .setTitle(newSongTitle)
+    .setURL(`https://www.youtube.com/watch?v=${nextSong}`)
+    .setColor(11529967)
+    .setThumbnail(`https://img.youtube.com/vi/${nextSong}/hqdefault.jpg`)
+    .setAuthor('Song playing now');
+
+  channel.send({ embed });
+}
+
 module.exports = {
   searchYoutubeSong,
   findSongByIndex,
@@ -80,4 +124,6 @@ module.exports = {
   checkForSomeoneInVC,
   addSongToQueue,
   getPlaylistLength,
+  ytdlAndPlay,
+  playNextQueueSong,
 };

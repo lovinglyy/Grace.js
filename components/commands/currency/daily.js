@@ -14,7 +14,8 @@ module.exports = {
       if (Date.now() >= searchUser[1]) {
         dailyCD.splice(elemIndex, 1);
       } else {
-        return msg.reply('you already got your dailies today, huh!');
+        msg.reply('you already got your dailies today, huh!');
+        return;
       }
     }
 

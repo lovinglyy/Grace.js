@@ -1,5 +1,4 @@
 const { promisify } = require('util');
-const { google } = require('googleapis');
 const Discord = require('discord.js');
 const libs = require('./../../libs/');
 
@@ -37,7 +36,7 @@ module.exports = {
     if (userPlaylist.indexOf(songId) !== -1) return msg.reply('this song is already in your playlist! :p');
 
 
-    if (userPlaylist.length >= 420) {
+    if (userPlaylist.length >= 270) {
       const playlistLength = libs.music.getPlaylistLength(userPlaylist);
       if (playlistLength > 14) return msg.reply('you reached the maximum amount of songs in your playlist, please remove some or clear it :3');
     }

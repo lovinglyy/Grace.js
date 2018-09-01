@@ -20,7 +20,7 @@
     "redis"
   ],
   "dependencies": {
-    "discord.js": "^11.4.2",
+    "discord.js": "github:discordjs/discord.js",
     "googleapis": "^33.0.0",
     "node-fetch": "^2.2.0",
     "node-opus": "^0.3.0",

@@ -15,6 +15,7 @@ module.exports = {
     // Currency commands
     if (CMD_SYNTAX === 'DAILY') return currency.daily.cmd(msg, grace.getCooldown('daily'), grace.getRedisClient());
     if (CMD_SYNTAX === 'BANK') return currency.bank.cmd(msg, grace.getRedisClient());
+    if (CMD_SYNTAX === 'ROULETTE') return currency.roulette.cmd(msg, grace.getCooldown('currency'), grace.getRedisClient(), argSeparator + CMD_SYNTAX.length);
 
     // Reaction commands
     if (CMD_SYNTAX === 'IDC') return reactions.idc(msg, argSeparator + CMD_SYNTAX.length);

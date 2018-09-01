@@ -69,17 +69,21 @@ function compareStrings(str1, str2) {
 function getMember(search, msg, errorReply) {
   const similarMembers = [];
 
-  if (msg.guild.members.get(search)) return msg.guild.members.get(search);
+  const resolveMember = msg.guild.members.resolve(search);
+  if (resolveMember) return resolveMember;
 
   if (search.length < 3 || search.length > 16) {
     if (errorReply) msg.channel.send(`${msg.author}, sorry but I couldn't find the specified member :c`);
     return false;
   }
 
+  let displayNameUpper;
+  let memberUsername;
+  let namesSimilarity;
   const usernameSearch = msg.guild.members.first(55).find((curMember) => {
-    const displayNameUpper = curMember.displayName.toUpperCase();
-    const memberUsername = `${curMember.user.username}#${curMember.user.discriminator}`;
-    const namesSimilarity = compareStrings(displayNameUpper, search);
+    displayNameUpper = curMember.displayName.toUpperCase();
+    memberUsername = `${curMember.user.username}#${curMember.user.discriminator}`;
+    namesSimilarity = compareStrings(displayNameUpper, search);
     if (namesSimilarity > 0.32) {
       similarMembers.push([namesSimilarity, `${curMember.displayName} (${memberUsername})`]);
     }

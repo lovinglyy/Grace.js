@@ -1,9 +1,8 @@
 const { promisify } = require('util');
 const ytdl = require('ytdl-core');
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 const streamOptions = { seek: 0, volume: 1 };
-const opus = require('node-opus');
 const libs = require('./../../libs/');
 
 module.exports = {
@@ -18,16 +17,20 @@ module.exports = {
   async cmd(msg, argSeparator, redisClient, youtubeAPI) {
     if (!redisClient || !youtubeAPI) return;
     const singleArgument = msg.content.substring(argSeparator);
-    const memberVoiceChannelID = msg.member.voiceChannelID;
-    const memberVC = msg.member.voiceChannel;
-    const graceVC = msg.guild.me.voiceChannelID;
+    const memberVoiceChannelID = msg.member.voice.channelID;
+    const memberVC = msg.member.voice.channel;
+    const graceVC = msg.guild.me.voice.channelID;
 
     if (!memberVoiceChannelID) return msg.reply('you need to be in a voice channel :p');
     if (!singleArgument) return msg.reply('you need to tell me a song, with a name, youtube link or from your playlist.');
     if (msg.guild.voiceConnection && msg.guild.voiceConnection.dispatcher && memberVoiceChannelID !== graceVC) return msg.reply('I\'m busy! owo');
-    if (memberVoiceChannelID !== graceVC && (memberVC.joinable === false && memberVC.speakable === false && memberVC.full === true)) {
-      return msg.reply(`please check my permissions for that voice chat or if it is full! I need to be able to speak and join that
+    if (memberVoiceChannelID !== graceVC
+      && (memberVC.joinable === false
+      || memberVC.speakable === false
+      || memberVC.full === true)) {
+      msg.reply(`please check my permissions for that voice chat or if it is full! I need to be able to speak and join that
         voice channel, huh.`);
+      return;
     }
 
     const hgetAsync = promisify(redisClient.hget).bind(redisClient);
@@ -57,56 +60,27 @@ module.exports = {
 
     if (!songTitle || !songId) return msg.reply('couldn\'t get the song title or id.');
 
-    const stream = ytdl(`https://www.youtube.com/watch?v=${songId}`, { filter: 'audioonly' });
     let dispatcher;
-
     if (!msg.guild.voiceConnection) {
-      const joinVC = memberVC.join();
-      dispatcher = await joinVC.then(connection => connection.playStream(stream, streamOptions));
-    } else if (!(msg.guild.voiceConnection && msg.guild.voiceConnection.dispatcher)) {
-      dispatcher = msg.guild.voiceConnection.playStream(stream, streamOptions);
+      dispatcher = await memberVC.join().then(
+        connection => libs.music.ytdlAndPlay(songId, connection),
+      );
+    } else if (msg.guild.voiceConnection && !(msg.guild.voiceConnection.dispatcher)) {
+      dispatcher = libs.music.ytdlAndPlay(songId, msg.guild.voiceConnection);
     } else {
       libs.music.addSongToQueue(msg.guild.id, songId, songTitle, redisClient, msg);
       return;
     }
 
-    async function endDispatcher() {
-      if (libs.music.checkForSomeoneInVC(msg.guild.voiceConnection.channel.members) === false) {
-        if (msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
-        msg.guild.me.voiceChannel.leave();
-        redisClient.del(`${msg.guild.id}_queue`);
-      } else {
-        const lpopAsync = promisify(redisClient.lpop).bind(redisClient);
-        let nextSong = await lpopAsync(`${msg.guild.id}_queue`);
-        if (!nextSong) {
-          if (msg.guild.voiceConnection) msg.guild.voiceConnection.disconnect();
-          msg.guild.me.voiceChannel.leave();
-          return;
-        }
-        const newSongTitle = nextSong.substring(11);
-        nextSong = nextSong.substring(0, 12);
-        const newStream = ytdl(`https://www.youtube.com/watch?v=${nextSong}`, { filter: 'audioonly' });
-        dispatcher = msg.guild.voiceConnection.playStream(newStream, streamOptions);
-        dispatcher.once('end', endDispatcher);
-
-        const _ = new Discord.RichEmbed()
-          .setTitle(newSongTitle)
-          .setURL(`https://www.youtube.com/watch?v=${nextSong}`)
-          .setColor(11529967)
-          .setThumbnail(`https://img.youtube.com/vi/${nextSong}/hqdefault.jpg`)
-          .setAuthor('Song playing now');
-
-        msg.channel.send({ embed: _ });
-      }
-    }
-
-    dispatcher.once('end', endDispatcher);
-    const _ = new Discord.RichEmbed()
+    dispatcher.once('end', () => {
+      libs.music.playNextQueueSong(msg.guild.id, msg.channel, redisClient);
+    });
+    const embed = new MessageEmbed()
       .setTitle(songTitle)
       .setURL(`https://www.youtube.com/watch?v=${songId}`)
       .setColor(11529967)
       .setThumbnail(`https://img.youtube.com/vi/${songId}/hqdefault.jpg`)
       .setAuthor('Song playing now');
-    msg.channel.send({ embed: _ });
+    msg.channel.send({ embed });
   },
 };

@@ -10,6 +10,7 @@ class Grace {
     this.redisClient = options.redisClient;
     this.dailyCD = [];
     this.pubgCD = [];
+    this.currencyCD = [];
     this.setup();
   }
 
@@ -27,6 +28,7 @@ class Grace {
     let cooldownArray;
     if (cd === 'daily') cooldownArray = this.dailyCD;
     if (cd === 'pubg') cooldownArray = this.pubgCD;
+    if (cd === 'currency') cooldownArray = this.currencyCD;
     if (!cooldownArray) return new Error('Couldn\'t find a specified cooldown.');
     return cooldownArray;
   }
@@ -40,8 +42,13 @@ class Grace {
   }
 }
 
-new Grace({
+const grace = new Grace({
   botConfig: config,
-  client: new Discord.Client(),
+  client: new Discord.Client({
+    restSweepInterval: 50,
+    disabledEvents: ['TYPING_START', 'USER_NOTE_UPDATE', 'WEBHOOKS_UPDATE'],
+  }),
   redisClient: redis.createClient(),
-}); // eslint-disable-line no-new
+});
+
+module.exports.grace = grace;

@@ -3,13 +3,13 @@ const libs = require('./../../libs/');
 
 module.exports = {
   /**
-	* Remove a song from the user playlist by it's number.
-	* '+7' numbers in the strings manipulations are representing the
-	* amount of chars in '!SongID', indexOf has an awesome performance
-	* and it try to get the most of it.
-	* @param {string} msg - A Discord message.
-	* @param redisClient A connected and ready to use Redis client.
-	*/
+  * Remove a song from the user playlist by it's number.
+  * '+7' numbers in the strings manipulations are representing the
+  * amount of chars in '!SongID', indexOf has an awesome performance
+  * and it try to get the most of it.
+  * @param {string} msg - A Discord message.
+  * @param redisClient A connected and ready to use Redis client.
+  */
   async cmd(msg, argSeparator, redisClient) {
     if (!redisClient) return;
 
