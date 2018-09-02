@@ -4,8 +4,7 @@
 
 module.exports = {
   cmd(msg) {
-    const rand = Math.random();
-    if (rand > 0.48) {
+    if (Math.random() > 0.48) {
       msg.reply('I say yes!');
     } else {
       msg.reply('No!');

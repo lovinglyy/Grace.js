@@ -8,9 +8,9 @@ class Grace {
     this.config = options.botConfig;
     this.client = options.client;
     this.redisClient = options.redisClient;
-    this.dailyCD = [];
-    this.pubgCD = [];
-    this.currencyCD = [];
+    this.dailyCD = new Map();
+    this.pubgCD = new Map();
+    this.currencyCD = new Map();
     this.setup();
   }
 
@@ -46,7 +46,7 @@ const grace = new Grace({
   botConfig: config,
   client: new Discord.Client({
     restSweepInterval: 50,
-    disabledEvents: ['TYPING_START', 'USER_NOTE_UPDATE', 'WEBHOOKS_UPDATE'],
+    disabledEvents: ['TYPING_START', 'USER_NOTE_UPDATE', 'WEBHOOKS_UPDATE', 'PRESENCE_UPDATE'],
   }),
   redisClient: redis.createClient(),
 });

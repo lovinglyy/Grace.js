@@ -1,4 +1,5 @@
 const apiModel = require('./model');
+const libs = require('./../../libs/');
 
 module.exports = {
   /**
@@ -11,17 +12,9 @@ module.exports = {
     const singleArgument = msg.content.substring(argSeparator);
     const authorID = msg.author.id;
 
-    let elemIndex = -1;
-    const searchUser = pubgCD.find((element) => {
-      elemIndex += 1;
-      return (authorID === element[0]);
-    });
-    if (searchUser) {
-      if (Date.now() >= searchUser[1]) {
-        pubgCD.splice(elemIndex, 1);
-      } else {
-        return msg.reply('this command is on cooldown!');
-      }
+    if (!libs.util.checkCooldown(msg.author.id, pubgCD)) {
+      msg.reply('this command is on cooldown!!');
+      return;
     }
 
     const options = {};
@@ -32,13 +25,18 @@ module.exports = {
 
     const cdTime = new Date(Date.now());
     cdTime.setSeconds(cdTime.getSeconds() + 20);
-    pubgCD.push([authorID, cdTime.getTime()]);
+    pubgCD.set(authorID, cdTime.getTime());
 
     const stats = await pugbAPI.getPlayer();
-    if (!(stats.data) || !(stats.data[0])) return msg.reply('couldn\'t find data for that player.');
+    if (!(stats.data) || !(stats.data[0])) {
+      msg.reply('couldn\'t find data for that player.');
+      return;
+    }
     const playerSeason = await pugbAPI.getPlayerSeasonInfo(stats.data[0].id);
-    if (!playerSeason) return msg.reply('couldn\'t find this season data for that player.');
+    if (!playerSeason) {
+      msg.reply('couldn\'t find this season data for that player.');
+      return;
+    }
     msg.channel.send(`${stats.data[0].attributes.name}'s info:`, { embed: playerSeason });
-    return true;
   },
 };

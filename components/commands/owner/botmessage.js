@@ -1,3 +1,5 @@
+const { MessageEmbed } = require('discord.js');
+
 module.exports = {
   cmd(msg, argSeparator) {
     const singleArgument = msg.content.substring(argSeparator);
@@ -13,13 +15,11 @@ module.exports = {
     const msgContent = singleArgument.substring(singleArgument.indexOf(title) + title.length + 2);
     if (!msgContent) return msg.reply('please type the title and the message content, using " around the title :p. Ex: "title" bla bla bla.');
 
-    msg.channel.send({
-      embed: {
-        title: `**${title}**`,
-        description: msgContent,
-        color: 11529967,
-      },
-    });
+    const embed = new MessageEmbed()
+      .setTitle(`**${title}**`)
+      .setDescription(msgContent)
+      .setColor(11529967);
+    msg.channel.send({ embed });
     if (msg.guild.me.hasPermission('MANAGE_MESSAGES')) msg.delete();
     return true;
   },

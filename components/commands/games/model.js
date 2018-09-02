@@ -1,6 +1,6 @@
 /* eslint prefer-destructuring: ["error", {AssignmentExpression: {array: false}}] */
 const fetch = require('node-fetch');
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 
 class PubgAPI {
   constructor(options) {
@@ -28,6 +28,9 @@ class PubgAPI {
   * @returns {Discord.RichEmbed|boolean} it will return a embed with the stats or a false value.
   */
   async getPlayerSeasonInfo(accountID) {
+    const embed = new MessageEmbed()
+      .setColor(11529967);
+    let info;
     const today = new Date(Date.now());
     let month = today.getMonth() + 2;
     if (month > 12) month = 1;
@@ -48,11 +51,6 @@ class PubgAPI {
       ['Squad FPP', search.data.attributes.gameModeStats['squad-fpp']],
     ];
 
-
-    const embed = new Discord.RichEmbed()
-      .setColor(11529967);
-
-    let info;
     for (let i = 0; i < gameModes.length; i += 1) {
       if (gameModes[i][1].roundsPlayed !== 0) {
         info = gameModes[i][1];

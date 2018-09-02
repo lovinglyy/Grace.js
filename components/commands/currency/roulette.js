@@ -4,19 +4,10 @@ const libs = require('./../../libs/');
 module.exports = {
   async cmd(msg, currencyCD, redisClient, argSeparator) {
     if (!redisClient) return;
-    const authorID = msg.author.id;
-    let elemIndex = -1;
-    const searchUser = currencyCD.find((element) => {
-      elemIndex += 1;
-      return (authorID === element[0]);
-    });
-    if (searchUser) {
-      if (Date.now() >= searchUser[1]) {
-        currencyCD.splice(elemIndex, 1);
-      } else {
-        msg.reply('currency commands in cooldown!! :3');
-        return;
-      }
+
+    if (!libs.util.checkCooldown(msg.author.id, currencyCD)) {
+      msg.reply('currency commands in cooldown!! :3');
+      return;
     }
 
     const singleArgument = msg.content.substring(argSeparator);
@@ -32,7 +23,7 @@ module.exports = {
 
     const cdTime = new Date(Date.now());
     cdTime.setSeconds(cdTime.getSeconds() + 7);
-    currencyCD.push([authorID, cdTime.getTime()]);
+    currencyCD.set(msg.author.id, cdTime.getTime());
 
     const rouletteRnd = libs.util.getRandomIntInclusive(1, 10);
     let winAmount = 0;
@@ -41,7 +32,7 @@ module.exports = {
     if (rouletteRnd === 10) winAmount = bet * 2.4;
 
     const hgetAsync = promisify(redisClient.hget).bind(redisClient);
-    let userBlossoms = await hgetAsync(authorID, 'userBlossoms');
+    let userBlossoms = await hgetAsync(msg.author.id, 'userBlossoms');
     if (!userBlossoms) userBlossoms = 0;
     userBlossoms = Number(userBlossoms);
     if (userBlossoms < bet) {
@@ -50,7 +41,7 @@ module.exports = {
     }
 
     const newBlossomAmount = ((userBlossoms - bet) + winAmount).toFixed(2);
-    redisClient.hset(authorID, 'userBlossoms', newBlossomAmount);
+    redisClient.hset(msg.author.id, 'userBlossoms', newBlossomAmount);
     msg.channel.send(`${msg.author}, your roulette: **${rouletteRnd}**, you got **${winAmount}** 🌼! *Total in bank: ${newBlossomAmount}*.`);
   },
 };
