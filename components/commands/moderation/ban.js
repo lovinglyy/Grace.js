@@ -15,7 +15,9 @@ module.exports = {
 
     const quotMarkIndex = singleArgument.indexOf('"');
     const anotherQuotMarkIndex = singleArgument.indexOf('"', quotMarkIndex + 1);
-    if (quotMarkIndex !== -1 && anotherQuotMarkIndex !== -1) banReason = singleArgument.substring(quotMarkIndex + 1, anotherQuotMarkIndex);
+    if (quotMarkIndex !== -1 && anotherQuotMarkIndex !== -1) {
+      banReason = singleArgument.substring(quotMarkIndex + 1, anotherQuotMarkIndex);
+    }
 
     if (Number.isNaN(daysToDelete)) return msg.reply('the number of days doesn\'t look valid!');
 

@@ -14,14 +14,21 @@ module.exports = {
       if (Date.now() >= searchUser[1]) {
         currencyCD.splice(elemIndex, 1);
       } else {
-        return msg.reply('currency commands in cooldown!! :3');
+        msg.reply('currency commands in cooldown!! :3');
+        return;
       }
     }
 
     const singleArgument = msg.content.substring(argSeparator);
-    if (!singleArgument) return msg.reply('you need to specify a bet amount.');
+    if (!singleArgument) {
+      msg.reply('you need to specify a bet amount.');
+      return;
+    }
     const bet = Number(singleArgument) << 0;
-    if (Number.isNaN(bet) || bet < 10 || bet > 50) return msg.reply('please specify a bet amount from 10 up to 50 blossoms.');
+    if (Number.isNaN(bet) || bet < 10 || bet > 50) {
+      msg.reply('please specify a bet amount from 10 up to 50 blossoms.');
+      return;
+    }
 
     const cdTime = new Date(Date.now());
     cdTime.setSeconds(cdTime.getSeconds() + 7);
@@ -37,7 +44,10 @@ module.exports = {
     let userBlossoms = await hgetAsync(authorID, 'userBlossoms');
     if (!userBlossoms) userBlossoms = 0;
     userBlossoms = Number(userBlossoms);
-    if (userBlossoms < bet) return msg.reply('you don\'t have that amount to bet.');
+    if (userBlossoms < bet) {
+      msg.reply('you don\'t have that amount to bet.');
+      return;
+    }
 
     const newBlossomAmount = ((userBlossoms - bet) + winAmount).toFixed(2);
     redisClient.hset(authorID, 'userBlossoms', newBlossomAmount);

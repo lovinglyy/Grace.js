@@ -3,9 +3,6 @@
   "version": "0.3.0",
   "description": "Discord.js bot in active development.",
   "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
   "author": "lovinglyy",
   "license": "MPL-2.0",
   "repository": {
@@ -31,5 +28,8 @@
     "eslint": "^5.4.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.14.0"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }

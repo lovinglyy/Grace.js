@@ -61,6 +61,12 @@ module.exports = {
     if (msg.member.hasPermission('KICK_MEMBERS')) { if (CMD_SYNTAX === 'KICK') return moderation.kick.cmd(msg, argSeparator + CMD_SYNTAX.length); }
 
     // Commands for the bot owner
-    if (msg.author.id === grace.getConfig().botOwner && msg.guild.ownerID === grace.getConfig().botOwner) { if (CMD_SYNTAX === 'BOTMESSAGE' || CMD_SYNTAX === 'BOTMSG') return owner.botMsg.cmd(msg, argSeparator + CMD_SYNTAX.length); }
+    if (msg.author.id === grace.getConfig().botOwner
+    && msg.guild.ownerID === grace.getConfig().botOwner) {
+      if (CMD_SYNTAX === 'BOTMESSAGE' || CMD_SYNTAX === 'BOTMSG') {
+        owner.botMsg.cmd(msg, argSeparator + CMD_SYNTAX.length);
+      }
+    }
+    return true;
   },
 };

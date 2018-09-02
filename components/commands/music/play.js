@@ -1,8 +1,5 @@
 const { promisify } = require('util');
-const ytdl = require('ytdl-core');
 const { MessageEmbed } = require('discord.js');
-
-const streamOptions = { seek: 0, volume: 1 };
 const libs = require('./../../libs/');
 
 module.exports = {
@@ -21,12 +18,19 @@ module.exports = {
     const memberVC = msg.member.voice.channel;
     const graceVC = msg.guild.me.voice.channelID;
 
-    if (!memberVoiceChannelID) return msg.reply('you need to be in a voice channel :p');
-    if (!singleArgument) return msg.reply('you need to tell me a song, with a name, youtube link or from your playlist.');
-    if (msg.guild.voiceConnection && msg.guild.voiceConnection.dispatcher && memberVoiceChannelID !== graceVC) return msg.reply('I\'m busy! owo');
-    if (memberVoiceChannelID !== graceVC
-      && (memberVC.joinable === false
-      || memberVC.speakable === false
+    if (!memberVoiceChannelID) {
+      msg.reply('you need to be in a voice channel :p');
+      return;
+    } if (!singleArgument) {
+      msg.reply('you need to tell me a song, with a name, youtube link or from your playlist.');
+      return;
+    } if (msg.guild.voiceConnection
+      && msg.guild.voiceConnection.dispatcher
+      && memberVoiceChannelID !== graceVC) {
+      msg.reply('I\'m busy! owo');
+      return;
+    } if (memberVoiceChannelID !== graceVC
+      && (memberVC.joinable === false || memberVC.speakable === false
       || memberVC.full === true)) {
       msg.reply(`please check my permissions for that voice chat or if it is full! I need to be able to speak and join that
         voice channel, huh.`);
@@ -43,22 +47,37 @@ module.exports = {
     if (ytLinkPos !== -1) searchSong = msg.content.substring(ytLinkPos + 20, ytLinkPos + 31);
     if (searchSong) {
       const searchResults = await libs.music.searchYoutubeSong(msg, youtubeAPI, searchSong);
-      if (!searchResults) return msg.reply('no results found, did you try searching the song by name? :p');
+      if (!searchResults) {
+        msg.reply('no results found, did you try searching the song by name? :p');
+        return;
+      }
       [songId, songTitle] = searchResults;
     } else {
       const songNumber = Number(singleArgument) << 0;
-      if (songNumber < 1 || songNumber > 15) return msg.reply('the song number doesn\'t look valid.');
+      if (songNumber < 1 || songNumber > 15) {
+        msg.reply('the song number doesn\'t look valid.');
+        return;
+      }
 
       const userPlaylist = await hgetAsync(msg.author.id, 'userPlaylist');
-      if (!userPlaylist) return msg.reply('that song number isn\'t in your playlist.');
+      if (!userPlaylist) {
+        msg.reply('that song number isn\'t in your playlist.');
+        return;
+      }
       const song = libs.music.findSongByIndex(userPlaylist, songNumber);
-      if (!song) return msg.reply('that song number isn\'t in your playlist.');
+      if (!song) {
+        msg.reply('that song number isn\'t in your playlist.');
+        return;
+      }
       const songTitlePos = song.indexOf('!ST');
       songTitle = song.substring(0, songTitlePos);
       songId = song.substring(songTitlePos + 3);
     }
 
-    if (!songTitle || !songId) return msg.reply('couldn\'t get the song title or id.');
+    if (!songTitle || !songId) {
+      msg.reply('couldn\'t get the song title or id.');
+      return;
+    }
 
     let dispatcher;
     if (!msg.guild.voiceConnection) {

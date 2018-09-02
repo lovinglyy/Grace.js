@@ -1,6 +1,3 @@
-/*
-  Basically all reaction commands.
-*/
 const archive = require('./archive');
 const libs = require('./../../libs/');
 
@@ -8,7 +5,10 @@ module.exports = {
   hug(msg, argSeparator) {
     const anotherMember = libs.util.findOneMember(msg, argSeparator);
     if (!anotherMember) return;
-    if (anotherMember.id === msg.author.id) return msg.reply('I can\'t believe that you\'re so lonely :(');
+    if (anotherMember.id === msg.author.id) {
+      msg.reply('I can\'t believe that you\'re so lonely :(');
+      return;
+    }
     msg.channel.send(`${msg.author} is hugging ${anotherMember}! <3`, { files: [archive.hugs[~~(Math.random() * (archive.hugs.length))]] });
   },
   idc(msg, argSeparator) {
@@ -27,7 +27,9 @@ module.exports = {
       outputMsg = `${msg.author} is angry with ${anotherMember}.`;
       if (anotherMember.id === msg.author.id) outputMsg = `${msg.author} is angry!!!`;
     }
-    msg.channel.send(outputMsg, { files: [archive.angry[~~(Math.random() * (archive.angry.length))]] });
+    msg.channel.send(outputMsg, {
+      files: [archive.angry[~~(Math.random() * (archive.angry.length))]],
+    });
   },
   positive(msg, argSeparator) {
     const anotherMember = libs.util.findOneMember(msg, argSeparator, false);
@@ -36,19 +38,27 @@ module.exports = {
       outputMsg = `${msg.author} is feeling positive with ${anotherMember}.`;
       if (anotherMember.id === msg.author.id) outputMsg = `${msg.author} is feeling positive!`;
     }
-    msg.channel.send(outputMsg, { files: [archive.positive[~~(Math.random() * (archive.positive.length))]] });
+    msg.channel.send(outputMsg, {
+      files: [archive.positive[~~(Math.random() * (archive.positive.length))]],
+    });
   },
   charm(msg, argSeparator) {
     const anotherMember = libs.util.findOneMember(msg, argSeparator);
     if (!anotherMember) return;
-    if (anotherMember.id === msg.author.id) return msg.channel.send(`${msg.author} is feeling lonely :c *pat pat*`);
+    if (anotherMember.id === msg.author.id) {
+      msg.channel.send(`${msg.author} is feeling lonely :c *pat pat*`);
+      return;
+    }
     msg.channel.send(`${msg.author} is sending their charm to ${anotherMember}! <3 <3`,
       { files: [archive.charm[~~(Math.random() * (archive.charm.length))]] });
   },
   poke(msg, argSeparator) {
     const anotherMember = libs.util.findOneMember(msg, argSeparator);
     if (!anotherMember) return;
-    if (anotherMember.id === msg.author.id) return msg.channel.send(` ${msg.author} has nobody to poke... t.t`);
+    if (anotherMember.id === msg.author.id) {
+      msg.channel.send(` ${msg.author} has nobody to poke... t.t`);
+      return;
+    }
     msg.channel.send(`${msg.author} is poking ${anotherMember}! *grr*`, { files: [archive.poke[~~(Math.random() * (archive.poke.length))]] })
       .catch(console.error);
   },

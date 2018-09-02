@@ -20,6 +20,7 @@ module.exports = {
         color: 11529967,
       },
     });
-    if (msg.guild.me.hasPermission('MANAGE_MESSAGES')) return msg.delete();
+    if (msg.guild.me.hasPermission('MANAGE_MESSAGES')) msg.delete();
+    return true;
   },
 };

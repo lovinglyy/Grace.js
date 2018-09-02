@@ -1,3 +1,4 @@
+/* eslint prefer-destructuring: ["error", {AssignmentExpression: {array: false}}] */
 const fetch = require('node-fetch');
 const Discord = require('discord.js');
 

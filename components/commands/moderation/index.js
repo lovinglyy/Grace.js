@@ -1,5 +1,5 @@
 /*
-	Moderation commands.
+  Moderation commands.
 */
 const purge = require('./purge');
 const ban = require('./ban');

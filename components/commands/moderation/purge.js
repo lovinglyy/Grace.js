@@ -1,8 +1,6 @@
 /*
-	Purge a x amount of messages in the current channel.
+  Purge a x amount of messages in the current channel.
 */
-
-const libs = require('./../../libs/');
 
 module.exports = {
   cmd(msg, argSeparator) {
@@ -16,12 +14,12 @@ module.exports = {
     if (amount < 1) return msg.reply('you need to purge a positive number or the universe will collapse.');
     if (amount > 50) amount = 50;
 
-    return msg.channel.fetchMessages({ limit: amount })
+    return msg.channel.messages.fetch({ limit: amount })
       .then((messages) => {
         if (!messages || messages.length === 0) return;
         msg.channel.bulkDelete(messages)
-          .then((messages) => {
-            msg.channel.send(`Some messages got deleted! =^._.^= ∫\n*by: ${msg.author}* - *deleted quantity: ${messages.size}*`);
+          .then((deletedMessages) => {
+            msg.channel.send(`Some messages got deleted! =^._.^= ∫\n*by: ${msg.author}* - *deleted quantity: ${deletedMessages.size}*`);
           })
           .catch(console.error);
       })

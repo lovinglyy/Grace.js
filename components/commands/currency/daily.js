@@ -1,5 +1,5 @@
-const libs = require('./../../libs/');
 const { promisify } = require('util');
+const libs = require('./../../libs/');
 
 module.exports = {
   async cmd(msg, dailyCD, redisClient) {

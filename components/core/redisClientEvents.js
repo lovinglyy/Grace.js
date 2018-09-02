@@ -5,7 +5,7 @@ module.exports = {
     redisClient.on('ready', () => {
       console.log('Redis client connection established.');
     });
-    redisClient.on('reconnecting', (delay, attempt) => {
+    redisClient.on('reconnecting', () => {
       console.log('Connection to Redis lost, trying to reconnect...');
     });
   },

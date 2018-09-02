@@ -1,5 +1,5 @@
 /*
-	This file has all gif links used in reaction commands.
+  This file has all gif links used in reaction commands.
 */
 
 // Hug, cuddle, anything related

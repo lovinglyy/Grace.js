@@ -1,13 +1,12 @@
-const { promisify } = require('util');
 const apiModel = require('./model');
 
 module.exports = {
   /**
-	* Command for pubg stats about a player.
-	* @param {string} msg A Discord message.
+  * Command for pubg stats about a player.
+  * @param {string} msg A Discord message.
   * @param {number} argSeparator The index where the message is separated
-	* @param {string} pubgKey PUBG Api key, https://developer.playbattlegrounds.com/
-	*/
+  * @param {string} pubgKey PUBG Api key, https://developer.playbattlegrounds.com/
+  */
   async cmd(msg, argSeparator, pubgKey, pubgCD) {
     const singleArgument = msg.content.substring(argSeparator);
     const authorID = msg.author.id;
@@ -40,5 +39,6 @@ module.exports = {
     const playerSeason = await pugbAPI.getPlayerSeasonInfo(stats.data[0].id);
     if (!playerSeason) return msg.reply('couldn\'t find this season data for that player.');
     msg.channel.send(`${stats.data[0].attributes.name}'s info:`, { embed: playerSeason });
+    return true;
   },
 };
