@@ -4,9 +4,10 @@ module.exports = {
   /**
   * Show a user playlist, Redis client must be connected.
   * @param {string} msg - A Discord message.
-  * @param redisClient A connected and ready to use Redis client.
+  * @param {object} grace Grace object from the class.
   */
-  async cmd(msg, redisClient) {
+  async cmd(msg, grace) {
+    const redisClient = grace.getRedisClient();
     if (!redisClient) return;
 
     const hgetAsync = promisify(redisClient.hget).bind(redisClient);

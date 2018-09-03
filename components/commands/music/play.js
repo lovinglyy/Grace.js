@@ -1,4 +1,3 @@
-
 const { promisify } = require('util');
 const { MessageEmbed } = require('discord.js');
 const libs = require('./../../libs/');
@@ -8,13 +7,13 @@ module.exports = {
   * Play a song by searching a song title in youtube, by a youtube url, or
   * by a number in the user playlist(more will be added in relation to this).
   * @param {string} msg - A Discord message.
-  * @param {number} argSeparator The index where the message is separated.
-  * @param redisClient A connected and ready to use Redis client.
-  * @param {string} youtubeAPI The YoutubeAPI key, used to search songs.
+  * @param {object} grace Object with client, configs, etc.
   */
-  async cmd(msg, argSeparator, redisClient, youtubeAPI) {
+  async cmd(msg, grace) {
+    const redisClient = grace.getRedisClient();
+    const { youtubeAPI } = grace.getConfig();
     if (!redisClient || !youtubeAPI) return;
-    const singleArgument = msg.content.substring(argSeparator);
+    const singleArgument = libs.discordUtil.getSingleArg(msg);
     const memberVoiceChannelID = msg.member.voice.channelID;
     const memberVC = msg.member.voice.channel;
     const graceVC = msg.guild.me.voice.channelID;
@@ -22,15 +21,18 @@ module.exports = {
     if (!memberVoiceChannelID) {
       msg.reply('you need to be in a voice channel :p');
       return;
-    } if (!singleArgument) {
+    }
+    if (!singleArgument) {
       msg.reply('you need to tell me a song, with a name, youtube link or from your playlist.');
       return;
-    } if (msg.guild.voiceConnection
+    }
+    if (msg.guild.voiceConnection
       && msg.guild.voiceConnection.dispatcher
       && memberVoiceChannelID !== graceVC) {
       msg.reply('I\'m busy! owo');
       return;
-    } if (memberVoiceChannelID !== graceVC
+    }
+    if (memberVoiceChannelID !== graceVC
       && (memberVC.joinable === false || memberVC.speakable === false
       || memberVC.full === true)) {
       msg.reply(`please check my permissions for that voice chat or if it is full! I need to be able to speak and join that
@@ -65,11 +67,13 @@ module.exports = {
         msg.reply('that song number isn\'t in your playlist.');
         return;
       }
+
       const song = libs.music.findSongByIndex(userPlaylist, songNumber);
       if (!song) {
         msg.reply('that song number isn\'t in your playlist.');
         return;
       }
+
       const songTitlePos = song.indexOf('!ST');
       songTitle = song.substring(0, songTitlePos);
       songId = song.substring(songTitlePos + 3);
@@ -82,19 +86,15 @@ module.exports = {
 
     let dispatcher;
     if (!msg.guild.voiceConnection) {
-      dispatcher = await memberVC.join().then(
-        connection => libs.music.ytdlAndPlay(songId, connection),
-      );
-    } else if (msg.guild.voiceConnection && !(msg.guild.voiceConnection.dispatcher)) {
-      dispatcher = libs.music.ytdlAndPlay(songId, msg.guild.voiceConnection);
+      dispatcher = await memberVC.join().then(() => libs.music.ytdlAndPlay(songId, msg.guild));
+      dispatcher.once('end', () => {
+        libs.music.playNextQueueSong(msg.guild.id, msg.channel, grace.getClient());
+      });
     } else {
-      libs.music.addSongToQueue(msg.guild.id, songId, songTitle, redisClient, msg);
+      libs.music.addSongToQueue(songId, songTitle, msg);
       return;
     }
-
-    dispatcher.once('end', () => {
-      libs.music.playNextQueueSong(msg.guild.id, msg.channel, redisClient);
-    });
+    if (!dispatcher) return;
     const embed = new MessageEmbed()
       .setTitle(songTitle)
       .setURL(`https://www.youtube.com/watch?v=${songId}`)

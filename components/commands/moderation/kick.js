@@ -1,7 +1,11 @@
+const libs = require('./../../libs/');
+
 module.exports = {
-  cmd(msg, argSeparator) {
+  cmd(msg) {
+    if (!msg.member.hasPermission('KICK_MEMBERS')) return false;
     if (msg.guild.me.hasPermission('KICK_MEMBERS') === false) return msg.reply('I need the kick members permission for that command.');
-    const singleArgument = msg.content.substring(argSeparator);
+
+    const singleArgument = libs.discordUtil.getSingleArg(msg);
     const mentionedUser = msg.mentions.members.first();
 
     if (!mentionedUser) return msg.reply('you need to mention the user that will be kicked.');

@@ -2,7 +2,9 @@ const { promisify } = require('util');
 const libs = require('./../../libs/');
 
 module.exports = {
-  async cmd(msg, dailyCD, redisClient) {
+  async cmd(msg, grace) {
+    const redisClient = grace.getRedisClient();
+    const dailyCD = grace.getCooldown('daily');
     if (!redisClient) return;
 
     if (!libs.util.checkCooldown(msg.author.id, dailyCD)) {
@@ -20,6 +22,6 @@ module.exports = {
     if (!userBlossoms) userBlossoms = 0;
     userBlossoms = Number(userBlossoms);
     redisClient.hset(msg.author.id, 'userBlossoms', userBlossoms + dailyBlossoms);
-    libs.discordUtil.sendDefaultEmbed(`you got **${dailyBlossoms}** 🌼 ^^`, msg);
+    msg.reply(`you got **${dailyBlossoms}** 🌼 ^^`);
   },
 };

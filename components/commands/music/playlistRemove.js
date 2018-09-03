@@ -5,12 +5,14 @@ module.exports = {
   /**
   * Remove a song from the user playlist by it's number.
   * @param {string} msg - A Discord message.
-  * @param redisClient A connected and ready to use Redis client.
+  * @param {object} grace Grace object from the class.
   */
-  async cmd(msg, argSeparator, redisClient) {
+  async cmd(msg, grace) {
+    const redisClient = grace.getRedisClient();
     if (!redisClient) return;
 
-    const removeIndex = ~~(Number(msg.content.substring(argSeparator)));
+    const singleArgument = libs.discordUtil.getSingleArg(msg);
+    const removeIndex = ~~(Number(singleArgument));
 
     if (!removeIndex || Number.isNaN(removeIndex)) {
       msg.reply('type only the song number!');

@@ -5,11 +5,13 @@ module.exports = {
   /**
   * Command for pubg stats about a player.
   * @param {string} msg A Discord message.
-  * @param {number} argSeparator The index where the message is separated
-  * @param {string} pubgKey PUBG Api key, https://developer.playbattlegrounds.com/
+  * @param {object} grace Grace object from the class, it will
+  * use to get the API key.
   */
-  async cmd(msg, argSeparator, pubgKey, pubgCD) {
-    const singleArgument = msg.content.substring(argSeparator);
+  async cmd(msg, grace) {
+    const pubgCD = grace.getCooldown('pubg');
+    const pubgKey = grace.getConfig().pubgAPI;
+    const singleArgument = libs.discordUtil.getSingleArg(msg);
     const authorID = msg.author.id;
 
     if (!libs.util.checkCooldown(msg.author.id, pubgCD)) {

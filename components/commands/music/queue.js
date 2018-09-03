@@ -1,26 +1,23 @@
-const { promisify } = require('util');
-const Discord = require('discord.js');
+const { MessageEmbed } = require('discord.js');
+const libs = require('./../../libs/');
 
 module.exports = {
   /**
   * Show the guild song queue.
   * @param {string} msg - A Discord message.
-  * @param redisClient A connected and ready to use Redis client.
   */
-  async cmd(msg, redisClient, argSeparator) {
-    if (!redisClient) return;
-
-    const singleArgument = msg.content.substring(argSeparator);
-    if (singleArgument && singleArgument === 'clear' && msg.member.hasPermission('MANAGE_MESSAGES')) {
-      redisClient.del(`${msg.guild.id}_queue`);
-      msg.reply('the guild queue is now empty! :3');
+  async cmd(msg) {
+    const guildQueue = libs.music.getQueue(msg.guild.id);
+    const singleArgument = libs.discordUtil.getSingleArg(msg);
+    
+    if (!guildQueue) {
+      msg.reply('the guild playlist is empty!! owo');
       return;
     }
 
-    const lrangeAsync = promisify(redisClient.lrange).bind(redisClient);
-    const guildQueue = await lrangeAsync(`${msg.guild.id}_queue`, 0, 14);
-    if (!guildQueue || guildQueue.length < 1) {
-      msg.reply('the guild playlist is empty.');
+    if (singleArgument && singleArgument === 'clear' && msg.member.hasPermission('MANAGE_MESSAGES')) {
+      libs.music.clearQueue(msg.guild.id);
+      msg.reply('the guild queue is now empty! :3');
       return;
     }
 
@@ -30,7 +27,7 @@ module.exports = {
       if (songTitle) formatedSongs += `**[${i + 1}]** ${songTitle}\n`;
     }
 
-    const embed = new Discord.RichEmbed()
+    const embed = new MessageEmbed()
       .setTitle(`${msg.guild.name}'s song queue:`)
       .setDescription(formatedSongs.substring(0, 1500))
       .setColor(11529967)

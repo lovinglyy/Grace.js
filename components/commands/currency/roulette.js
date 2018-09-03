@@ -2,7 +2,9 @@ const { promisify } = require('util');
 const libs = require('./../../libs/');
 
 module.exports = {
-  async cmd(msg, currencyCD, redisClient, argSeparator) {
+  async cmd(msg, grace) {
+    const redisClient = grace.getRedisClient();
+    const currencyCD = grace.getCooldown('currency');
     if (!redisClient) return;
 
     if (!libs.util.checkCooldown(msg.author.id, currencyCD)) {
@@ -10,7 +12,7 @@ module.exports = {
       return;
     }
 
-    const singleArgument = msg.content.substring(argSeparator);
+    const singleArgument = libs.discordUtil.getSingleArg(msg);
     if (!singleArgument) {
       msg.reply('you need to specify a bet amount.');
       return;

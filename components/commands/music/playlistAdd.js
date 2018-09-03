@@ -1,5 +1,5 @@
+const { MessageEmbed } = require('discord.js');
 const { promisify } = require('util');
-const Discord = require('discord.js');
 const libs = require('./../../libs/');
 
 module.exports = {
@@ -7,20 +7,20 @@ module.exports = {
   *Add a youtube song to a user playlist. Redis client must be connected.
   * This function only make use of the Youtube API to search videos.
   * @param {string} msg - A Discord message.
-  * @param {number} argSeparator The index where the message is separated
-  * @param redisClient A connected and ready to use Redis client
-  * @param {string} youtubeAPI The YoutubeAPI key, used to search songs.
+  * @param {object} grace Grace object from the class.
   */
-  async cmd(msg, argSeparator, redisClient, youtubeAPI) {
+  async cmd(msg, grace) {
+    const redisClient = grace.getRedisClient();
+    const { youtubeAPI } = grace.getConfig();
     if (!redisClient || !youtubeAPI) return;
 
-    const singleArgument = msg.content.substring(argSeparator);
+    const singleArgument = libs.discordUtil.getSingleArg(msg);
     const youtubeLinkPos = msg.content.indexOf('youtube.com/watch?v=');
 
     const search = (youtubeLinkPos === -1)
       ? singleArgument : msg.content.substring(youtubeLinkPos + 20, youtubeLinkPos + 31);
 
-    if (!search) {
+    if (!search || search.length < 5 || search.length > 75) {
       msg.reply('please tell me a valid youtube link or song name! *grrr*');
       return;
     }
@@ -56,7 +56,7 @@ module.exports = {
 
     redisClient.hset(msg.author.id, 'userPlaylist', `${userPlaylist + songTitle}!ST${songId}!SID`);
 
-    const embed = new Discord.RichEmbed()
+    const embed = new MessageEmbed()
       .setTitle(songTitle)
       .setURL(`https://www.youtube.com/watch?v=${songId}`)
       .setColor(11529967)

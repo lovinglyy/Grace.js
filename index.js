@@ -3,6 +3,11 @@ const redis = require('redis');
 const components = require('./components/');
 const config = require('./config');
 
+const discordClient = new Discord.Client({
+  restSweepInterval: 50,
+  disabledEvents: ['TYPING_START', 'USER_NOTE_UPDATE', 'WEBHOOKS_UPDATE', 'PRESENCE_UPDATE'],
+});
+
 class Grace {
   constructor(options) {
     this.config = options.botConfig;
@@ -42,13 +47,8 @@ class Grace {
   }
 }
 
-const grace = new Grace({
+new Grace({
   botConfig: config,
-  client: new Discord.Client({
-    restSweepInterval: 50,
-    disabledEvents: ['TYPING_START', 'USER_NOTE_UPDATE', 'WEBHOOKS_UPDATE', 'PRESENCE_UPDATE'],
-  }),
+  client: discordClient,
   redisClient: redis.createClient(),
 });
-
-module.exports.grace = grace;

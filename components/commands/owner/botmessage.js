@@ -1,8 +1,16 @@
 const { MessageEmbed } = require('discord.js');
+const libs = require('./../../libs/');
 
 module.exports = {
-  cmd(msg, argSeparator) {
-    const singleArgument = msg.content.substring(argSeparator);
+  cmd(msg, grace) {
+    if (msg.author.id !== grace.getConfig().botOwner
+    || msg.guild.ownerID !== grace.getConfig().botOwner) return false;
+
+    const singleArgument = libs.discordUtil.getSingleArg(msg);
+    if (!singleArgument) {
+      msg.reply('please type the title and the message content, using " around the title :p. Ex: "title" bla bla bla.');
+      return false;
+    }
 
     const quotMarkIndex = singleArgument.indexOf('"');
     const anotherQuotMarkIndex = singleArgument.indexOf('"', quotMarkIndex + 1);
