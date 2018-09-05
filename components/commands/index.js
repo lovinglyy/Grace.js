@@ -35,6 +35,8 @@ const commands = {
   PURGE: msg => moderation.purge.cmd(msg),
   BAN: msg => moderation.ban.cmd(msg),
   KICK: msg => moderation.kick.cmd(msg),
+  REMOVEROLES: (msg, grace) => moderation.removeRoles.cmd(msg, grace),
+  ROLEBEAUTIFY: msg => moderation.roleBeautify.cmd(msg),
 
   BOTMESSAGE: (msg, grace) => owner.botMsg.cmd(msg, grace),
 };

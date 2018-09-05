@@ -9,7 +9,7 @@ module.exports = {
   async cmd(msg) {
     const guildQueue = libs.music.getQueue(msg.guild.id);
     const singleArgument = libs.discordUtil.getSingleArg(msg);
-    
+
     if (!guildQueue) {
       msg.reply('the guild playlist is empty!! owo');
       return;

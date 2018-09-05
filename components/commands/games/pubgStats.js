@@ -25,9 +25,7 @@ module.exports = {
     options.pubgKey = pubgKey;
     const pugbAPI = new apiModel.PubgAPI(options);
 
-    const cdTime = new Date(Date.now());
-    cdTime.setSeconds(cdTime.getSeconds() + 20);
-    pubgCD.set(authorID, cdTime.getTime());
+    libs.util.setCooldown(pubgCD, authorID, 20);
 
     const stats = await pugbAPI.getPlayer();
     if (!(stats.data) || !(stats.data[0])) {

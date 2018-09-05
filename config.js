@@ -6,7 +6,7 @@ config.youtubeAPI = 'youtube v3 api key, https://developers.google.com/youtube/v
 config.pubgAPI = 'your pubg api key, https://developer.playbattlegrounds.com/';
 config.enabledCommands = ['DAILY', 'BANK', 'ROULETTE', 'IDC', 'POKE', 'YUMMY', 'POSITIVE', 'HUG', 'ANGRY',
   'CHARM', 'EW', 'PLAY', 'QUEUE', 'PLAYLISTADD', 'PLAYLIST', 'PLAYLISTCLEAR', 'PLAYLISTREMOVE', 'PUBGSTATS',
-  'DP', 'ASK', 'PURGE', 'BAN', 'KICK', 'BOTMESSAGE'];
+  'DP', 'ASK', 'PURGE', 'BAN', 'REMOVEROLES', 'ROLEBEAUTIFY', 'KICK', 'BOTMESSAGE'];
 
 Object.freeze(config);
 module.exports = config;

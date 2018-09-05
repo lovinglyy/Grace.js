@@ -23,9 +23,7 @@ module.exports = {
       return;
     }
 
-    const cdTime = new Date(Date.now());
-    cdTime.setSeconds(cdTime.getSeconds() + 7);
-    currencyCD.set(msg.author.id, cdTime.getTime());
+    libs.util.setCooldown(currencyCD, msg.author.id, 7);
 
     const rouletteRnd = libs.util.getRandomIntInclusive(1, 10);
     let winAmount = 0;

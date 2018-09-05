@@ -47,7 +47,7 @@ class Grace {
   }
 }
 
-new Grace({
+new Grace({ // eslint-disable-line no-new
   botConfig: config,
   client: discordClient,
   redisClient: redis.createClient(),

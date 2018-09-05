@@ -17,7 +17,7 @@ module.exports = {
     dailyCD.set(msg.author.id, tomorrow.getTime());
 
     const hgetAsync = promisify(redisClient.hget).bind(redisClient);
-    const dailyBlossoms = libs.util.getRandomIntInclusive(8, 32);
+    const dailyBlossoms = libs.util.getRandomIntInclusive(8, 32).toFixed(2);
     let userBlossoms = await hgetAsync(msg.author.id, 'userBlossoms');
     if (!userBlossoms) userBlossoms = 0;
     userBlossoms = Number(userBlossoms);

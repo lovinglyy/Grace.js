@@ -48,7 +48,8 @@ class Music {
    * @param {Collection} members A collection of members in the voice channel.
    */
   static checkForSomeoneInVC(members) {
-    const vcMembers = members.filter(member => member.user.bot === false && member.voice.deaf === false);
+    const vcMembers = members.filter(member => member.user.bot === false
+      && member.voice.deaf === false);
     if (vcMembers && vcMembers.size > 0) {
       return true;
     }

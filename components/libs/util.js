@@ -47,18 +47,30 @@ class Util {
   }
 
   /**
-   * Check if the user has a cooldown or not.
-   * @param {string} userID The userID to check the cooldown.
+   * Check if the user/guild has a cooldown or not.
+   * @param {Snowflake} id The user or guild snowflake to check the cooldown.
    * @param {Map} cooldown A map representing the user cooldown.
    */
-  static checkCooldown(userID, cooldown) {
-    const userCD = cooldown.get(userID);
-    if (!userCD) return true;
-    if (Date.now() >= userCD) {
-      cooldown.delete(userID);
+  static checkCooldown(id, cooldown) {
+    const CD = cooldown.get(id);
+    if (!CD) return true;
+    if (Date.now() >= CD) {
+      cooldown.delete(id);
       return true;
     }
     return false;
+  }
+
+  /**
+   * Set a cooldown in seconds.
+   * @param {Map} map The cooldown map
+   * @param {Snowflake} id ID of a Guild or User to find in the map
+   * @param {String} seconds Time in seconds to set the cooldown
+   */
+  static setCooldown(map, id, seconds) {
+    const cdTime = new Date(Date.now());
+    cdTime.setSeconds(cdTime.getSeconds() + seconds);
+    map.set(id, cdTime.getTime());
   }
 }
 

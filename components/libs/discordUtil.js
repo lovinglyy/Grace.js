@@ -2,7 +2,6 @@ const { MessageEmbed } = require('discord.js');
 const util = require('./util');
 
 class DiscordUtil {
-
   /**
    * Get the text next to the command issued as a single argument,
    * not splitting it.
