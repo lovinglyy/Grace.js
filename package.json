@@ -30,6 +30,7 @@
     "eslint-plugin-import": "^2.14.0"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "eslint ."
   }
 }
