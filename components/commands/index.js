@@ -5,11 +5,13 @@ const utilities = require('./utilities/');
 const music = require('./music/');
 const currency = require('./currency/');
 const games = require('./games/');
+const management = require('./management/');
+const fun = require('./fun/');
 
 const commands = {
-  DAILY: (msg, grace) => currency.daily.cmd(msg, grace),
-  BANK: (msg, grace) => currency.bank.cmd(msg, grace),
-  ROULETTE: (msg, grace) => currency.roulette.cmd(msg, grace),
+  DAILY: (msg, grace, asyncRedis) => currency.daily(msg, grace, asyncRedis),
+  BANK: (msg, _, asyncRedis) => currency.bank(msg, _, asyncRedis),
+  ROULETTE: (msg, grace, asyncRedis) => currency.roulette(msg, grace, asyncRedis),
 
   IDC: (msg, grace) => reactions.idc(msg, grace),
   POKE: (msg, grace) => reactions.poke(msg, grace),
@@ -20,25 +22,30 @@ const commands = {
   CHARM: (msg, grace) => reactions.charm(msg, grace),
   EW: (msg, grace) => reactions.ew(msg, grace),
 
-  PLAY: (msg, grace) => music.play.cmd(msg, grace),
-  QUEUE: (msg, grace) => music.queue.cmd(msg, grace),
-  PLAYLISTADD: (msg, grace) => music.playlistAdd.cmd(msg, grace),
-  PLAYLISTCLEAR: (msg, grace) => music.playlistClear.cmd(msg, grace),
-  PLAYLIST: (msg, grace) => music.myPlaylist.cmd(msg, grace),
-  PLAYLISTREMOVE: (msg, grace) => music.playlistRemove.cmd(msg, grace),
+  PLAY: (msg, grace, asyncRedis) => music.play(msg, grace, asyncRedis),
+  QUEUE: msg => music.queue(msg),
+  PLAYLISTADD: (msg, grace, asyncRedis) => music.playlistAdd(msg, grace, asyncRedis),
+  PLAYLISTCLEAR: (msg, grace) => music.playlistClear(msg, grace),
+  PLAYLIST: (msg, _, asyncRedis) => music.myPlaylist(msg, _, asyncRedis),
+  PLAYLISTREMOVE: (msg, grace, asyncRedis) => music.playlistRemove(msg, grace, asyncRedis),
 
-  PUBGSTATS: (msg, grace) => games.pubgStats.cmd(msg, grace),
+  PUBGSTATS: (msg, grace) => games.pubgStats(msg, grace),
 
-  DP: (msg, grace) => utilities.dp.cmd(msg, grace),
-  ASK: msg => utilities.ask.cmd(msg),
+  DP: (msg, grace) => utilities.dp(msg, grace),
+  GUILDINFO: msg => utilities.guildInfo(msg),
 
-  PURGE: msg => moderation.purge.cmd(msg),
-  BAN: msg => moderation.ban.cmd(msg),
-  KICK: msg => moderation.kick.cmd(msg),
-  REMOVEROLES: (msg, grace) => moderation.removeRoles.cmd(msg, grace),
-  ROLEBEAUTIFY: msg => moderation.roleBeautify.cmd(msg),
+  ASK: msg => fun.ask(msg),
+  CAT: msg => fun.cat(msg),
 
-  BOTMESSAGE: (msg, grace) => owner.botMsg.cmd(msg, grace),
+  PURGE: msg => moderation.purge(msg),
+  BAN: msg => moderation.ban(msg),
+  KICK: msg => moderation.kick(msg),
+  REMOVEROLES: (msg, grace) => moderation.removeRoles(msg, grace),
+
+  ROLEBEAUTIFY: msg => management.roleBeautify(msg),
+  SETWELCOME: (msg, grace) => management.setWelcome(msg, grace),
+
+  BOTMESSAGE: (msg, grace) => owner.botMsg(msg, grace),
 };
 
 module.exports = commands;

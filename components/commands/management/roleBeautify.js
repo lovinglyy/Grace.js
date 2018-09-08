@@ -28,36 +28,34 @@ const palletes = [
 
 const guildBeautifyCooldown = new Map();
 
-module.exports = {
-  cmd(msg) {
-    if (!msg.member.hasPermission('MANAGE_ROLES')) return;
-    if (!msg.guild.me.hasPermission('MANAGE_ROLES')) return;
+module.exports = (msg) => {
+  if (!msg.member.hasPermission('MANAGE_ROLES')) return;
+  if (!msg.guild.me.hasPermission('MANAGE_ROLES')) return;
 
-    if (!libs.util.checkCooldown(msg.guild.id, guildBeautifyCooldown)) {
-      msg.reply('this guild has a cooldown for this magical command! Don\'t worry, it\'s only a few seconds!!');
-      return;
-    }
+  if (!libs.util.checkCooldown(msg.guild.id, guildBeautifyCooldown)) {
+    msg.reply('this guild has a cooldown for this magical command! Don\'t worry, it\'s only a few seconds!!');
+    return;
+  }
 
-    const roleList = msg.mentions.roles;
-    if (!roleList || roleList.size < 3 || roleList.size > 5) {
-      msg.reply('you need to mention the roles, from 3, up to 5! Example: @Role 1, @Role 2, @Role 3.');
-      return;
-    }
+  const roleList = msg.mentions.roles;
+  if (!roleList || roleList.size < 3 || roleList.size > 5) {
+    msg.reply('you need to mention the roles, from 3, up to 5! Example: @Role 1, @Role 2, @Role 3.');
+    return;
+  }
 
-    if (roleList.some(role => !role.editable)) {
-      msg.reply('please make sure that I can edit all specified roles.');
-      return;
-    }
+  if (roleList.some(role => !role.editable)) {
+    msg.reply('please make sure that I can edit all specified roles.');
+    return;
+  }
 
-    libs.util.setCooldown(guildBeautifyCooldown, msg.guild.id, 14);
+  libs.util.setCooldown(guildBeautifyCooldown, msg.guild.id, 12);
 
-    const rndPallete = palletes[~~(Math.random() * (palletes.length))][0];
-    let colorIndex = 0;
-    roleList.each((role) => {
-      role.setColor(rndPallete.colors[colorIndex]);
-      colorIndex += 1;
-    });
+  const rndPallete = palletes[~~(Math.random() * (palletes.length))][0];
+  let colorIndex = 0;
+  roleList.each((role) => {
+    role.setColor(rndPallete.colors[colorIndex]);
+    colorIndex += 1;
+  });
 
-    msg.channel.send(`Colors are now magically set to the **${rndPallete.name}** pallete!`);
-  },
+  msg.channel.send(`Colors are now magically set to the **${rndPallete.name}** pallete!`);
 };

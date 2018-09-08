@@ -3,10 +3,10 @@ const util = require('./util');
 
 class DiscordUtil {
   /**
-   * Get the text next to the command issued as a single argument,
-   * not splitting it.
-   *  @param {Message} msg A Discord Message
-   */
+  * Get the text next to the command issued as a single argument,
+  * not splitting it.
+  *  @param {Message} msg A Discord Message
+  */
   static getSingleArg(message) {
     if (message.content.indexOf(' ') === -1) return false;
     return message.content.substring(message.content.indexOf(' ') + 1);
@@ -41,8 +41,8 @@ class DiscordUtil {
   * @returns {object|boolean} Return the Discord Member found or a false value.
   */
   static getMember(search, msg, errorReply) {
-    const similarMembers = [];
     const resolveMember = msg.guild.members.resolve(search);
+    const similarMembers = [];
     let displayNameUpper;
     let memberUsername;
     let namesSimilarity;

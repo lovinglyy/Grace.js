@@ -1,4 +1,4 @@
 const dp = require('./dp');
-const ask = require('./ask');
+const guildInfo = require('./guildInfo');
 
-module.exports = { dp, ask };
+module.exports = { dp, guildInfo };

@@ -89,6 +89,47 @@ class Music {
     return songCount;
   }
 
+
+  static async getSong(singleArgument, msg, asyncRedis, ytAPI) {
+    let songToSearch;
+    const ytLinkPos = msg.content.indexOf('youtube.com/watch?v=');
+    if (ytLinkPos !== -1) songToSearch = msg.content.substring(ytLinkPos + 20, ytLinkPos + 31);
+    if (!Number(singleArgument)) songToSearch = singleArgument;
+
+    if (songToSearch) {
+      const searchResults = await this.searchYoutubeSong(msg, ytAPI, songToSearch);
+      if (!searchResults) {
+        msg.reply('no results found, did you try searching the song by name? :p');
+        return false;
+      }
+      return searchResults;
+    }
+
+    if (Number(singleArgument)) {
+      const songNumber = Number(singleArgument) << 0;
+      if (songNumber < 1 || songNumber > 15) {
+        msg.reply('the song number doesn\'t look valid.');
+        return false;
+      }
+
+      const userPlaylist = await asyncRedis.hget(msg.author.id, 'userPlaylist');
+      if (!userPlaylist) {
+        msg.reply('that song number isn\'t in your playlist.');
+        return false;
+      }
+
+      const song = this.findSongByIndex(userPlaylist, songNumber);
+      if (!song) {
+        msg.reply('that song number isn\'t in your playlist.');
+        return false;
+      }
+
+      const songTitlePos = song.indexOf('!ST');
+      return [song.substring(0, songTitlePos), song.substring(songTitlePos + 3)];
+    }
+    return false;
+  }
+
   /*
   * Return a song by the index that is show in the
   * user song playlist.

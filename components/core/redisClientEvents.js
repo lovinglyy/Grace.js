@@ -3,7 +3,7 @@ module.exports = {
     const redisClient = grace.getRedisClient();
 
     redisClient.on('ready', () => {
-      console.log('Redis client connection established.');
+      console.log(`Redis client connection established in ${redisClient.address}`);
     });
     redisClient.on('reconnecting', () => {
       console.log('Connection to Redis lost, trying to reconnect...');
