@@ -1,4 +1,8 @@
-<div style="text-align:center"><img src ="https://i.imgur.com/oYjBF9m.jpg" /></div>
+<div style="text-align:center">
+  <img src ="https://i.imgur.com/oYjBF9m.jpg" />
+  <p>
+  <img src ="https://travis-ci.org/lovinglyy/Grace.js.svg?branch=master" />
+</div>
 
 Grace is a Discord bot in development, using Discord.js master branch, the goal is to be the more complete as possible, keeping a good performance. There's no stable release yet and if you're a Discord member, you can give suggestions or just join the [Discord server](https://discord.gg/QtnPqZg).
 What we have so far:
