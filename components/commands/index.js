@@ -44,6 +44,7 @@ const commands = {
 
   ROLEBEAUTIFY: msg => management.roleBeautify(msg),
   SETWELCOME: (msg, grace) => management.setWelcome(msg, grace),
+  STARBOARD: (msg, grace) => management.starboard(msg, grace),
 
   BOTMESSAGE: (msg, grace) => owner.botMsg(msg, grace),
 };

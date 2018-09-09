@@ -1,6 +1,8 @@
 const apiModel = require('./model');
 const libs = require('./../../libs/');
 
+const pubgCD = new Map();
+
 /**
 * Command for pubg stats about a player.
 * @param {string} msg A Discord message.
@@ -8,7 +10,6 @@ const libs = require('./../../libs/');
 * be used to get the API key.
 */
 module.exports = async (msg, grace) => {
-  const pubgCD = grace.getCooldown('pubg');
   const pubgKey = grace.getConfig().pubgAPI;
   const singleArgument = libs.discordUtil.getSingleArg(msg);
   const authorID = msg.author.id;

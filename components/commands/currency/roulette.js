@@ -2,7 +2,7 @@ const libs = require('./../../libs/');
 
 module.exports = async (msg, grace, asyncRedis) => {
   const redisClient = grace.getRedisClient();
-  const currencyCD = grace.getCooldown('currency');
+  const { currencyCD } = grace.getCooldowns();
 
   if (!libs.util.checkCooldown(msg.author.id, currencyCD)) {
     msg.reply('currency commands in cooldown!! :3');
@@ -25,7 +25,7 @@ module.exports = async (msg, grace, asyncRedis) => {
 
   const rouletteRnd = libs.util.getRandomIntInclusive(1, 10);
   let winAmount = 0;
-  if (rouletteRnd > 5 && rouletteRnd < 9) winAmount = bet * 1.7;
+  if (rouletteRnd > 5 && rouletteRnd < 9) winAmount = bet * 1.3;
   if (rouletteRnd === 8 || rouletteRnd === 9) winAmount = bet * 1.8;
   if (rouletteRnd === 10) winAmount = bet * 2.4;
 
@@ -37,7 +37,7 @@ module.exports = async (msg, grace, asyncRedis) => {
     return;
   }
 
-  const newBlossomAmount = ((userBlossoms - bet) + winAmount).toFixed(2);
+  const newBlossomAmount = (userBlossoms + winAmount) << 0;
   redisClient.hset(msg.author.id, 'userBlossoms', newBlossomAmount);
-  msg.channel.send(`${msg.author}, your roulette: **${rouletteRnd}**, you got **${winAmount}** 🌼! *Total in bank: ${newBlossomAmount}*.`);
+  msg.channel.send(`${msg.author}, your roulette: **${rouletteRnd}**, you got **${winAmount << 0}** 🌼! *Total in bank: ${newBlossomAmount}*.`);
 };
