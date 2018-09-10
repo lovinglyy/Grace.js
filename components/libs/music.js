@@ -1,9 +1,5 @@
 const { google } = require('googleapis');
-const { MessageEmbed } = require('discord.js');
-const ytdl = require('ytdl-core');
 const { promisify } = require('util');
-
-const guildQueues = [];
 
 class Music {
   /**
@@ -17,14 +13,15 @@ class Music {
     const song = await youtube.search.list({
       part: 'id,snippet',
       q: search,
+      videoDimension: '2d',
+      videoDuration: 'short',
+      type: 'video',
       maxResults: 1,
     })
       .then(res => res.data)
-      .catch((error) => {
-        throw new Error(`Something ocurred with the searchYoutubeSong function. Error: ${error}`);
-      });
+      .catch(() => null);
 
-    if (!song) return msg.reply('something failed when trying to connect to youtube!');
+    if (!song) return false;
     if (song.items && song.items.length > 0) {
       return [song.items[0].id.videoId, song.items[0].snippet.title];
     }
@@ -44,36 +41,6 @@ class Music {
   }
 
   /**
-   * Used to check if someone is on the voice channel, excluding bots and deaf members.
-   * @param {Collection} members A collection of members in the voice channel.
-   */
-  static checkForSomeoneInVC(members) {
-    const vcMembers = members.filter(member => member.user.bot === false
-      && member.voice.deaf === false);
-    if (vcMembers && vcMembers.size > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * Add a song to a guild queue.
-   * @param {string} song A youtube song id(11 characters length).
-   * @param {string} songTitle The song title, to display.
-   * @param {Message} msg A Discord message, from the user that requested this.
-   */
-  static async addSongToQueue(song, songTitle, msg) {
-    if (guildQueues[msg.guild.id]) {
-      if (guildQueues[msg.guild.id].length >= 15) return msg.reply('the guild playlist is full!');
-      guildQueues[msg.guild.id].push(`${song}${songTitle}`);
-    } else {
-      guildQueues[msg.guild.id] = [`${song}${songTitle}`];
-    }
-    msg.channel.send(`Song **${songTitle}** added to the song queue!`);
-    return true;
-  }
-
-  /**
   * Return the song count in a playlist. By some local tests, this is faster
   * than splitting an array and getting the length.
   * @param {string} playlist - String with a playlist.
@@ -89,7 +56,6 @@ class Music {
     return songCount;
   }
 
-
   static async getSong(singleArgument, msg, asyncRedis, ytAPI) {
     let songToSearch;
     const ytLinkPos = msg.content.indexOf('youtube.com/watch?v=');
@@ -99,7 +65,7 @@ class Music {
     if (songToSearch) {
       const searchResults = await this.searchYoutubeSong(msg, ytAPI, songToSearch);
       if (!searchResults) {
-        msg.reply('no results found, did you try searching the song by name? :p');
+        msg.reply('song not found or the duration is not short.');
         return false;
       }
       return searchResults;
@@ -138,79 +104,6 @@ class Music {
     const songs = playlist.split('!SID');
     songs.pop();
     return songs[songIndex - 1];
-  }
-
-  /**
-   * Used to play songs from youtube.
-   * @param {string} songID The youtube song id.
-   * @param {VoiceConnection} guild The guild where the song will be played.
-   */
-  static async ytdlAndPlay(songID, guild) {
-    if (!guild.voiceConnection) return false;
-    const stream = ytdl(`https://www.youtube.com/watch?v=${songID}`, { filter: 'audioonly' });
-    const dispatcher = guild.voiceConnection.play(stream, { type: 'webm/opus' });
-    return dispatcher;
-  }
-
-  /**
-   * Get the next song in a guild queue and play it.
-   * @param {Snowflake} guildID The guild that we'll get the queue,
-   * it accepts only the guild as it resolves this value.
-   * @param {TextChannel} channel The channel to notify that the song will be played.
-   * @param {Discord Client} client Grace client, that will be used to resolve the guid.
-   */
-  static async playNextQueueSong(guildID, channel, client) {
-    const guild = client.guilds.resolve(guildID);
-    if (!guild || !guild.voiceConnection) return;
-
-    if (!this.checkForSomeoneInVC(guild.voiceConnection.channel.members)) {
-      guild.voiceConnection.disconnect();
-      guild.me.voice.channel.leave();
-      guildQueues[guildID].length = 0;
-      return;
-    }
-
-    if (!guildQueues[guildID] || guildQueues[guildID].length === 0) {
-      guild.voiceConnection.disconnect();
-      guild.me.voice.channel.leave();
-      return;
-    }
-
-    let nextSong = guildQueues[guildID].pop();
-    const newSongTitle = nextSong.substring(11);
-    nextSong = nextSong.substring(0, 12);
-    const dispatcher = await this.ytdlAndPlay(nextSong, guild);
-    if (!dispatcher) return;
-    dispatcher.once('end', () => {
-      this.playNextQueueSong(guildID, channel, client);
-    });
-    const embed = new MessageEmbed()
-      .setTitle(newSongTitle)
-      .setURL(`https://www.youtube.com/watch?v=${nextSong}`)
-      .setColor(11529967)
-      .setThumbnail(`https://img.youtube.com/vi/${nextSong}/hqdefault.jpg`)
-      .setAuthor('Song playing now');
-
-    channel.send({ embed });
-  }
-
-  /**
-   * Get a guild queue.
-   * @param {string} guildID ID of the guild to get the queue.
-   */
-  static getQueue(guildID) {
-    if (!guildQueues[guildID]) return false;
-    return guildQueues[guildID];
-  }
-
-  /**
-   * Clear a guild queue.
-   * @param {string} guildID ID of the guild that will be cleared.
-   */
-  static clearQueue(guildID) {
-    if (!guildQueues[guildID]) return false;
-    guildQueues[guildID].length = 0;
-    return true;
   }
 }
 

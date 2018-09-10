@@ -1,5 +1,6 @@
-const { MessageEmbed } = require('discord.js');
 const libs = require('./../../libs/');
+const GuildQueues = require('./models/guildQueues');
+const Song = require('./models/song');
 
 /**
 * Play a song by searching a song title in youtube, by a youtube url, or
@@ -28,8 +29,7 @@ module.exports = async (msg, grace, asyncRedis) => {
     return;
   }
   if (msg.member.voice.channelID !== msg.guild.me.voice.channelID
-    && (memberVC.joinable === false || memberVC.speakable === false
-    || memberVC.full === true)) {
+    && (!memberVC.joinable || !memberVC.speakable || memberVC.full)) {
     msg.reply(`please check my permissions for that voice chat or if it is full! I need to be able to speak and join that
       voice channel, huh.`);
     return;
@@ -44,22 +44,14 @@ module.exports = async (msg, grace, asyncRedis) => {
     return;
   }
 
-  let dispatcher;
+  const song = new Song({
+    id: songId, title: songTitle, guild: msg.guild, channel: msg.channel,
+  });
+
   if (!msg.guild.voiceConnection) {
-    dispatcher = await memberVC.join().then(() => libs.music.ytdlAndPlay(songId, msg.guild));
-    dispatcher.once('end', () => {
-      libs.music.playNextQueueSong(msg.guild.id, msg.channel, grace.getClient());
-    });
+    await memberVC.join().then(() => song.play())
+      .catch(() => msg.reply('couldn\'t join the voice channel!'));
   } else {
-    libs.music.addSongToQueue(songId, songTitle, msg);
-    return;
+    GuildQueues.addSongToQueue(songId, songTitle, msg);
   }
-  if (!dispatcher) return;
-  const embed = new MessageEmbed()
-    .setTitle(songTitle)
-    .setURL(`https://www.youtube.com/watch?v=${songId}`)
-    .setColor(11529967)
-    .setThumbnail(`https://img.youtube.com/vi/${songId}/hqdefault.jpg`)
-    .setAuthor('Song playing now');
-  msg.channel.send({ embed });
 };

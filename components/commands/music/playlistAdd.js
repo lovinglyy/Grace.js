@@ -23,11 +23,16 @@ module.exports = async (msg, grace, asyncRedis) => {
 
   const searchResults = await libs.music.searchYoutubeSong(msg, youtubeAPI, search);
   if (!searchResults) {
-    msg.reply('no results found, did you try searching the song by name? :p');
+    msg.reply('song not found or the duration is not short.');
     return;
   }
 
   const [songId, songTitle] = searchResults;
+
+  if (!songTitle || !songId) {
+    msg.reply('couldn\'t get the song title or id.');
+    return;
+  }
 
   if (songTitle.indexOf('!ST') !== -1 || songTitle.indexOf('!SID') !== -1) {
     msg.reply('that song can\'t be added to the playlist.');

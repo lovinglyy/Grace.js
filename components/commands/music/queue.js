@@ -1,12 +1,13 @@
 const { MessageEmbed } = require('discord.js');
 const libs = require('./../../libs/');
+const GuildQueues = require('./models/guildQueues');
 
 /**
 * Show the guild song queue.
 * @param {string} msg - A Discord message.
 */
 module.exports = async (msg) => {
-  const guildQueue = libs.music.getQueue(msg.guild.id);
+  const guildQueue = GuildQueues.getQueue(msg.guild.id);
   const singleArgument = libs.discordUtil.getSingleArg(msg);
 
   if (!guildQueue) {
@@ -15,7 +16,7 @@ module.exports = async (msg) => {
   }
 
   if (singleArgument && singleArgument === 'clear' && msg.member.hasPermission('MANAGE_MESSAGES')) {
-    libs.music.clearQueue(msg.guild.id);
+    GuildQueues.clearQueue(msg.guild.id);
     msg.reply('the guild queue is now empty! :3');
     return;
   }
