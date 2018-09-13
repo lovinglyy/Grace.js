@@ -5,9 +5,10 @@ const Music = require('./../../util/Music');
 * @param {string} msg - A Discord message.
 * @param {object} grace Grace object from the class.
 */
-module.exports = async (msg, grace, asyncRedis) => {
+module.exports = async (msg, grace) => {
   const singleArgument = DiscordUtil.getSingleArg(msg);
   const removeIndex = ~~(Number(singleArgument));
+  const redisClient = grace.getRedisClient();
 
   if (!removeIndex || Number.isNaN(removeIndex)) {
     msg.reply('type only the song number!');
@@ -18,7 +19,7 @@ module.exports = async (msg, grace, asyncRedis) => {
     return;
   }
 
-  const userPlaylist = await asyncRedis.hget(`user:${msg.author.id}`, 'userPlaylist');
+  const userPlaylist = await redisClient.hget(`user:${msg.author.id}`, 'userPlaylist');
 
   if (!userPlaylist) {
     msg.reply('you don\'t have a playlist!');
@@ -37,6 +38,6 @@ module.exports = async (msg, grace, asyncRedis) => {
   }
 
   const newPlaylist = userPlaylist.replace(`${song}!SID`, '');
-  grace.getRedisClient().hset(`user:${msg.author.id}`, 'userPlaylist', newPlaylist);
+  redisClient.hset(`user:${msg.author.id}`, 'userPlaylist', newPlaylist);
   msg.channel.send('Song removed from the playlist!');
 };

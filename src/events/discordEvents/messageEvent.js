@@ -2,18 +2,17 @@ const commands = require('./../../commands/');
 
 module.exports = class {
   constructor(options) {
-    this.client = options.client;
+    this.client = options.grace.getClient();
     this.grace = options.grace;
-    this.asyncRedis = options.asyncRedis;
+    this.redisClient = options.grace.getRedisClient();
     this.enabledCommands = options.grace.getConfig().enabledCommands;
     this.prefix = options.grace.getConfig().defaultPrefix;
-    this.redisClient = options.grace.getRedisClient();
     this.xpCD = {};
   }
 
   addExp(member) {
     const memberCD = this.xpCD[member.id];
-    if (memberCD && memberCD[member.id] && memberCD[member.id].includes(member.guild.id)) return;
+    if (memberCD && memberCD.includes(member.guild.id)) return;
     if (!memberCD) this.xpCD[member.id] = [];
     this.xpCD[member.id].push(member.guild.id);
     const elementIndex = this.xpCD[member.id].length;
@@ -38,7 +37,7 @@ module.exports = class {
       cmd = msg.content.substring(this.prefix.length).toUpperCase();
       spaceIndex = cmd.indexOf(' ');
       cmd = (spaceIndex === -1) ? cmd : cmd.substring(0, spaceIndex);
-      if (this.enabledCommands.includes(cmd)) commands[cmd](msg, this.grace, this.asyncRedis);
+      if (this.enabledCommands.includes(cmd)) commands[cmd](msg, this.grace);
     });
   }
 };

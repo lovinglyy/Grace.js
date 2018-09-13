@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 module.exports = class {
   constructor(options) {
     this.client = options.client;
-    this.asyncRedis = options.asyncRedis;
+    this.redisClient = options.redisClient;
     this.waitList = [];
   }
 
@@ -29,7 +29,7 @@ module.exports = class {
       this.waitList.splice(this.waitList.indexOf(msg.id), 1);
       const totalStars = msg.reactions.filter(r => r.emoji.name === '⭐').size;
       if (totalStars < 3) return;
-      const starboardChannelID = await this.asyncRedis.hget(`guild: ${msg.guild}`, 'starboardChannel');
+      const starboardChannelID = await this.redisClient.hget(`guild: ${msg.guild}`, 'starboardChannel');
       if (!starboardChannelID) return;
 
       const channel = msg.guild.channels.resolve(starboardChannelID);

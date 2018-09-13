@@ -6,7 +6,7 @@ const Cooldown = require('../../structures/Cooldown');
 * @param {string} msg - A Discord message
 * @param {object} asyncRedis Async redis methods
 */
-module.exports = async (msg, _, asyncRedis) => {
+module.exports = async (msg, grace) => {
   const leaderboardCD = new Cooldown({ key: msg.guild.id, obj: 'leaderboard' });
   let leaderboardDisplay = '';
   let guildLeaderboard;
@@ -15,7 +15,7 @@ module.exports = async (msg, _, asyncRedis) => {
   if (leaderboardCD.exists()) {
     leaderboardDisplay = leaderboardCD.get();
   } else {
-    guildLeaderboard = await asyncRedis.zrevrange(`guildxp:${msg.guild.id}`, 0, 10, 'WITHSCORES')
+    guildLeaderboard = await grace.getRedisClient().zrevrange(`guildxp:${msg.guild.id}`, 0, 10, 'WITHSCORES')
       .catch(() => null);
     if (!guildLeaderboard || guildLeaderboard.length < 1) {
       msg.reply('the guild leaderboard is empty!');

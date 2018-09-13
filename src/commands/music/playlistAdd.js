@@ -8,7 +8,7 @@ const Music = require('./../../util/Music');
 * @param {string} msg - A Discord message.
 * @param {object} grace Grace object from the class.
 */
-module.exports = async (msg, grace, asyncRedis) => {
+module.exports = async (msg, grace) => {
   const { youtubeAPI } = grace.getConfig();
   if (!youtubeAPI) return;
 
@@ -40,7 +40,7 @@ module.exports = async (msg, grace, asyncRedis) => {
     return;
   }
 
-  let userPlaylist = await asyncRedis.hget(`user:${msg.author.id}`, 'userPlaylist');
+  let userPlaylist = await grace.getRedisClient().hget(`user:${msg.author.id}`, 'userPlaylist');
   if (!userPlaylist) userPlaylist = '';
   if (userPlaylist.indexOf(songId) !== -1) {
     msg.reply('this song is already in your playlist! :p');

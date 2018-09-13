@@ -19,6 +19,7 @@
   "dependencies": {
     "discord.js": "github:discordjs/discord.js",
     "googleapis": "^33.0.0",
+    "ioredis": "^4.0.0",
     "node-fetch": "^2.2.0",
     "node-opus": "^0.3.0",
     "redis": "^2.8.0",

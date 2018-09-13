@@ -17,6 +17,8 @@ module.exports = async (msg, grace, type, mentionRequired = false) => {
     }
     if (type === 'idc') {
       reactionContent = `${msg.author} doesn't care about ${anotherMember}.`;
+    } else if (type === 'hug') {
+      reactionContent = `${msg.author} is hugging ${anotherMember} :3`;
     } else if (type === 'angry') {
       reactionContent = `${msg.author} is angry with ${anotherMember}.`;
     } else if (type === 'positive') {

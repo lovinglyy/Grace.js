@@ -1,7 +1,7 @@
 const DiscordUtil = require('./../../util/DiscordUtil');
 const Cooldown = require('../../structures/Cooldown');
 
-module.exports = async (msg, grace, asyncRedis) => {
+module.exports = async (msg, grace) => {
   const redisClient = grace.getRedisClient();
   const currencyCD = new Cooldown({ key: msg.author.id, obj: 'currency' });
 
@@ -30,7 +30,7 @@ module.exports = async (msg, grace, asyncRedis) => {
   if (rouletteRnd === 8 || rouletteRnd === 9) winAmount = bet * 1.8;
   if (rouletteRnd === 10) winAmount = bet * 2.4;
 
-  let userBlossoms = await asyncRedis.hget(`user:${msg.author.id}`, 'userBlossoms');
+  let userBlossoms = await redisClient.hget(`user:${msg.author.id}`, 'userBlossoms');
   userBlossoms = (userBlossoms) ? Number(userBlossoms) : 0;
 
   if (userBlossoms < bet) {

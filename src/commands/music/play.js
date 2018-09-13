@@ -9,7 +9,7 @@ const Song = require('./models/song');
 * @param {string} msg - A Discord message.
 * @param {object} grace Object with client, configs, etc.
 */
-module.exports = async (msg, grace, asyncRedis) => {
+module.exports = async (msg, grace) => {
   const { youtubeAPI } = grace.getConfig();
   if (!youtubeAPI) return;
   const singleArgument = DiscordUtil.getSingleArg(msg);
@@ -36,7 +36,7 @@ module.exports = async (msg, grace, asyncRedis) => {
     return;
   }
 
-  const songSearching = await Music.getSong(singleArgument, msg, asyncRedis, youtubeAPI);
+  const songSearching = await Music.getSong(singleArgument, msg, grace.getRedisClient(), youtubeAPI);
   if (!songSearching) return;
 
   const [songId, songTitle] = songSearching;

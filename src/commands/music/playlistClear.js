@@ -4,7 +4,6 @@
 * @param {object} grace Grace object from the class.
 */
 module.exports = async (msg, grace) => {
-  const redisClient = grace.getRedisClient();
-  redisClient.del(`user:${msg.author.id}`, 'userPlaylist');
+  grace.getRedisClient().del(`user:${msg.author.id}`, 'userPlaylist');
   msg.channel.send('I did clear your playlist! :o');
 };

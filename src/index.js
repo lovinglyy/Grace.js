@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const redis = require('redis');
+const Redis = require('ioredis');
 const events = require('./events');
 const config = require('./config');
 
@@ -44,7 +44,7 @@ class Grace {
 const grace = new Grace({
   botConfig: config,
   client: discordClient,
-  redisClient: redis.createClient(),
+  redisClient: new Redis(),
 });
 
 grace.setup();

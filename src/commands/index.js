@@ -11,8 +11,8 @@ const fun = require('./fun/');
 
 const commands = {
   DAILY: (msg, grace) => currency.daily(msg, grace),
-  BANK: (msg, _, asyncRedis) => currency.bank(msg, _, asyncRedis),
-  ROULETTE: (msg, grace, asyncRedis) => currency.roulette(msg, grace, asyncRedis),
+  BANK: (msg, grace) => currency.bank(msg, grace),
+  ROULETTE: (msg, grace) => currency.roulette(msg, grace),
 
   IDC: (msg, grace) => react(msg, grace, 'idc'),
   POKE: (msg, grace) => react(msg, grace, 'poke', true),
@@ -23,12 +23,12 @@ const commands = {
   CHARM: (msg, grace) => react(msg, grace, 'charm', true),
   EW: (msg, grace) => react(msg, grace, 'ew'),
 
-  PLAY: (msg, grace, asyncRedis) => music.play(msg, grace, asyncRedis),
+  PLAY: (msg, grace) => music.play(msg, grace),
   QUEUE: msg => music.queue(msg),
-  PLAYLISTADD: (msg, grace, asyncRedis) => music.playlistAdd(msg, grace, asyncRedis),
+  PLAYLISTADD: (msg, grace) => music.playlistAdd(msg, grace),
   PLAYLISTCLEAR: (msg, grace) => music.playlistClear(msg, grace),
-  PLAYLIST: (msg, _, asyncRedis) => music.myPlaylist(msg, _, asyncRedis),
-  PLAYLISTREMOVE: (msg, grace, asyncRedis) => music.playlistRemove(msg, grace, asyncRedis),
+  PLAYLIST: (msg, grace) => music.myPlaylist(msg, grace),
+  PLAYLISTREMOVE: (msg, grace) => music.playlistRemove(msg, grace),
 
   PUBGSTATS: (msg, grace) => games.pubgStats(msg, grace),
 
@@ -47,8 +47,8 @@ const commands = {
   SETWELCOME: (msg, grace) => management.setWelcome(msg, grace),
   STARBOARD: (msg, grace) => management.starboard(msg, grace),
 
-  LEADERBOARD: (msg, _, asyncRedis) => xp.leaderboard(msg, _, asyncRedis),
-  RANK: (msg, grace, asyncRedis) => xp.rank(msg, grace, asyncRedis),
+  LEADERBOARD: (msg, grace) => xp.leaderboard(msg, grace),
+  RANK: (msg, grace) => xp.rank(msg, grace),
 
   BOTMESSAGE: (msg, grace) => owner.botMsg(msg, grace),
 };

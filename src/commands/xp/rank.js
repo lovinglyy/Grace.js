@@ -6,14 +6,15 @@ const DiscordUtil = require('./../../util/DiscordUtil');
 * @param {string} msg - A Discord message
 * @param {object} asyncRedis Async redis methods
 */
-module.exports = async (msg, grace, asyncRedis) => {
+module.exports = async (msg, grace) => {
   let memberRank = '';
+  const redisClient = grace.getRedisClient();
   const member = (msg.content.indexOf(' ') !== -1) ? DiscordUtil.findOneMember(msg, grace) : msg.member;
   if (!member) return;
 
   const memberInfo = await Promise.all([
-    asyncRedis.zscore(`guildxp:${msg.guild.id}`, `member:${member.id}`),
-    asyncRedis.zrevrank(`guildxp:${msg.guild.id}`, `member:${member.id}`),
+    redisClient.zscore(`guildxp:${msg.guild.id}`, `member:${member.id}`),
+    redisClient.zrevrank(`guildxp:${msg.guild.id}`, `member:${member.id}`),
   ])
     .catch(() => null);
 

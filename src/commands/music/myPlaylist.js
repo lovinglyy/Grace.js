@@ -3,8 +3,8 @@
 * @param {string} msg - A Discord message.
 * @param {object} asyncRedis Redis async promisified functions
 */
-module.exports = async (msg, _, asyncRedis) => {
-  const userPlaylist = await asyncRedis.hget(`user:${msg.author.id}`, 'userPlaylist');
+module.exports = async (msg, grace) => {
+  const userPlaylist = await grace.getRedisClient().hget(`user:${msg.author.id}`, 'userPlaylist');
   if (!userPlaylist || userPlaylist.length < 1) {
     msg.reply('you don\'t have a playlist!');
     return;

@@ -47,7 +47,7 @@ exports.reactionTexts = {
 };
 
 exports.gifs = {
-  hugs: [
+  hug: [
     'https://i.imgur.com/r9aU2xv.gif',
     'https://i.imgur.com/wOmoeF8.gif',
     'https://i.imgur.com/nrdYNtL.gif',
