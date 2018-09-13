@@ -26,5 +26,5 @@ module.exports = (msg) => {
 
   return mentionedUser.ban({ days: daysToDelete, reason: banReason })
     .then(() => msg.channel.send(`${msg.author} banned ${mentionedUser} from the server! \n**Reason:** *${banReason}*.`))
-    .catch(console.error);
+    .catch(() => msg.reply('I couldn\'t ban that user!'));
 };

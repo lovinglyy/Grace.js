@@ -1,6 +1,6 @@
 const DiscordUtil = require('./../../util/DiscordUtil');
 
-module.exports = (msg) => {
+module.exports = async (msg) => {
   if (!msg.member.hasPermission('MANAGE_MESSAGES')) return;
   if (!msg.guild.me.hasPermission('MANAGE_MESSAGES')) {
     msg.reply('I don\'t have permissions, I need at least the manage messages permission to delete messages :c');
@@ -26,14 +26,17 @@ module.exports = (msg) => {
 
   if (amount > 50) amount = 50;
 
-  msg.channel.messages.fetch({ limit: amount })
-    .then((messages) => {
-      if (!messages || messages.length === 0) return;
-      msg.channel.bulkDelete(messages, true)
-        .then((deletedMessages) => {
-          msg.channel.send(`Some messages got deleted! =^._.^= ∫\n*by: ${msg.author}* - *deleted quantity: ${deletedMessages.size}*`);
-        })
-        .catch(console.error);
+  const fetchMsgs = await msg.channel.messages.fetch({ limit: amount })
+    .catch(() => null);
+
+  if (!fetchMsgs || fetchMsgs.length === 0) {
+    msg.reply('I couldn\'t get any message to delete!');
+    return;
+  }
+
+  msg.channel.bulkDelete(fetchMsgs, true)
+    .then((deletedMessages) => {
+      msg.channel.send(`Some messages got deleted! =^._.^= ∫\n*by: ${msg.author}* - *deleted quantity: ${deletedMessages.size}*`);
     })
-    .catch(console.error);
+    .catch(() => msg.reply('somehow I couldn\'t delete the messages.'));
 };

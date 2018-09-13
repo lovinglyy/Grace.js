@@ -36,7 +36,9 @@ module.exports = async (msg, grace) => {
     return;
   }
 
-  const songSearching = await Music.getSong(singleArgument, msg, grace.getRedisClient(), youtubeAPI);
+  const songSearching = await Music.getSong(
+    singleArgument, msg, grace.getRedisClient(), youtubeAPI,
+  );
   if (!songSearching) return;
 
   const [songId, songTitle] = songSearching;

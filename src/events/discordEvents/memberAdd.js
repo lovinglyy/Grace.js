@@ -11,7 +11,7 @@ module.exports = class {
         this.redisClient.hget(`guild:${member.guild.id}`, 'welcome'),
         this.redisClient.hget(`guild:${member.guild.id}`, 'welcomeChannel'),
       ]).catch(() => null);
-      
+
       if (!welcomeMsg || !welcomeChannelID) return;
 
       const channel = member.guild.channels.resolve(welcomeChannelID);
