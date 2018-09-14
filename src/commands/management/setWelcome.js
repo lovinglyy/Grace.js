@@ -1,7 +1,7 @@
 const Cooldown = require('./../../structures/Cooldown');
 const DiscordUtil = require('./../../util/DiscordUtil');
 
-module.exports = (msg, grace) => {
+module.exports = async (msg, grace) => {
   if (!msg.member.hasPermission('ADMINISTRATOR')) return;
   const redisClient = grace.getRedisClient();
   const singleArgument = DiscordUtil.getSingleArg(msg);
@@ -14,6 +14,17 @@ module.exports = (msg, grace) => {
 
   if (!singleArgument) {
     msg.reply('please tell me the new welcome message owo');
+    return;
+  }
+
+  if (singleArgument === 'remove') {
+    const deleted = await redisClient.hdel(`guild:${msg.guild.id}`, 'welcome', 'welcomeChannel');
+    if (deleted !== 2) {
+      msg.reply('this guild has no welcome message.');
+    } else {
+      msg.reply('this guild has no longer a welcome message.');
+    }
+    setWelcomeCD.set(1, 60);
     return;
   }
 

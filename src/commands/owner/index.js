@@ -1,3 +1,4 @@
 const botMsg = require('./botmessage');
+const setXP = require('./setXP');
 
-module.exports = { botMsg };
+module.exports = { botMsg, setXP };

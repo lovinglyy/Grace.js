@@ -44,13 +44,17 @@ const commands = {
   REMOVEROLES: (msg, grace) => moderation.removeRoles(msg, grace),
 
   ROLEBEAUTIFY: msg => management.roleBeautify(msg),
+  DEFAULTROLE: (msg, grace) => management.defaultRole(msg, grace),
   SETWELCOME: (msg, grace) => management.setWelcome(msg, grace),
   STARBOARD: (msg, grace) => management.starboard(msg, grace),
+  RANKREWARD: (msg, grace) => management.rankReward(msg, grace),
+  REWARDLIST: (msg, grace) => management.rewardList(msg, grace),
 
   LEADERBOARD: (msg, grace) => xp.leaderboard(msg, grace),
   RANK: (msg, grace) => xp.rank(msg, grace),
 
   BOTMESSAGE: (msg, grace) => owner.botMsg(msg, grace),
+  SETXP: (msg, grace) => owner.setXP(msg, grace),
 };
 
 module.exports = commands;

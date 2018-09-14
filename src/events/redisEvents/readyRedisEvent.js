@@ -5,7 +5,7 @@ module.exports = class {
 
   start() {
     this.redisClient.on('ready', () => {
-      console.log(`Redis client connection established in ${this.redisClient.address}`);
+      console.log('Redis client connection established.');
     });
   }
 };

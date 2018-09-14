@@ -37,6 +37,10 @@ class Util {
     }
     return equalChars * 2 / (str1.length + str2.length);
   }
+
+  static getXpInLv(xp) {
+    return Math.trunc((xp / (6 + 0.07 * xp)));
+  }
 }
 
 module.exports = Util;

@@ -1,5 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const Cooldown = require('../../structures/Cooldown');
+const Util = require('./../../util/Util');
 
 /**
 * Show a guild leaderboard.
@@ -23,7 +24,7 @@ module.exports = async (msg, grace) => {
     }
     for (let i = 0; i < guildLeaderboard.length; i += 2) {
       memberGet = msg.guild.members.resolve(guildLeaderboard[i].substring(7));
-      if (memberGet) leaderboardDisplay += `**${memberGet.displayName}**: ${guildLeaderboard[i + 1]}xp\n`;
+      if (memberGet) leaderboardDisplay += `**${memberGet.displayName}**: **Level ${Util.getXpInLv(guildLeaderboard[i + 1])}** (**${guildLeaderboard[i + 1]}**xp)\n`;
     }
     leaderboardCD.set(leaderboardDisplay, 360);
   }

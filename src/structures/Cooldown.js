@@ -5,6 +5,9 @@ const objs = {
   starboard: {},
   leaderboard: {},
   roleBeautify: {},
+  defaultRole: {},
+  rankReward: {},
+  rankRewardList: {},
 };
 
 class Cooldown {

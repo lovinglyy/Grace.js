@@ -1,5 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const DiscordUtil = require('./../../util/DiscordUtil');
+const Util = require('./../../util/Util');
 
 /**
 * Show the rank of a member
@@ -26,15 +27,14 @@ module.exports = async (msg, grace) => {
   const [score, rank] = memberInfo;
 
   if (member.id === msg.member.id) {
-    memberRank = `Your rank position is **${rank}**, ${member.displayName}, with **${score}**xp.\nKeep being active to get server xp.`;
+    memberRank = `Your rank position is **${rank}**, ${member.displayName}, in **level ${Util.getXpInLv(score)}** (**${score}**xp).\nKeep being active to get server xp.`;
   } else {
-    memberRank = `${member.displayName} rank position is **${rank}**, with **${score}**xp.\n`;
+    memberRank = `${member.displayName} rank position is **${rank}**, in **level ${Util.getXpInLv(score)}** (**${score}**xp).`;
   }
 
   const embed = new MessageEmbed()
     .setColor(11529967)
-    .setDescription(memberRank)
-    .setFooter('The rank position is refreshed periodically.');
+    .setDescription(memberRank);
 
   msg.channel.send('🌸 ~', { embed });
 };
