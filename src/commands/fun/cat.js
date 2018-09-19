@@ -10,5 +10,5 @@ module.exports = async (msg) => {
     msg.reply('a problem occurred in the cat factory.');
     return;
   }
-  msg.reply(`${cuteCatMessages[(Math.random() * (cuteCatMessages.length)) << 0]} uwu\n${search.url}`);
+  msg.reply(`${cuteCatMessages[(Math.random() * (cuteCatMessages.length)) << 0]}\n${search.url}`);
 };

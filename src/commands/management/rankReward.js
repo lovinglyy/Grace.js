@@ -57,6 +57,11 @@ level and remove, if you want to remove a rank reward or clear to remove all.`);
   }
 
   rankRewardCD.set(1, 3);
+  if (role.name === '@here' || role.name === '@everyone') {
+    msg.reply('that role can\'t be set as a default role.');
+    return;
+  }
+
   redisClient.hset(`guildrankrewards:${msg.guild.id}`, level, role.id);
   msg.channel.send(`Role **${role.name}** set as a reward for members that reach the **lv${level}** 🌺`);
 };

@@ -29,7 +29,7 @@ module.exports = async (msg, grace) => {
   }
 
   let role = msg.mentions.roles.first();
-  if (!role && singleArgument) role = msg.guild.roles.find(r => r.name === singleArgument.substring(singleArgument.indexOf(' ') + 1));
+  if (!role) role = msg.guild.roles.find(r => r.name === singleArgument.substring(singleArgument.indexOf(' ') + 1));
 
   if (!role) {
     msg.reply('I couldn\'t find the specified role.');
@@ -41,6 +41,11 @@ module.exports = async (msg, grace) => {
   }
 
   defaultRoleCD.set(1, 300);
+  if (role.name === '@here' || role.name === '@everyone') {
+    msg.reply('that role can\'t be set as a default role.');
+    return;
+  }
+
   redisClient.hset(`guild:${msg.guild.id}`, 'defaultRole', role.id);
   msg.channel.send('This guild now has a default role for new users! 🌺');
 };

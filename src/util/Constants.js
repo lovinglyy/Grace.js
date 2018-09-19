@@ -37,6 +37,24 @@ exports.cuteCatMessages = [
   'nobody is ever tired of cute cat gifs',
 ];
 
+exports.cuteDogMessages = [
+  'a cute ~~kitty~~ doggo for you!',
+  'dogs are so cuteee!',
+  'who doesn\'t love dogs?',
+  'it\'s a bunny! Wait... a doggo!',
+  'it\'s so fluffyyyyy that I wanna die.',
+  'dogs are life!',
+];
+
+exports.cuteBunnyMessages = [
+  'a cute bunny for you!',
+  'I loveeeee bunniess.',
+  'so cuteeeeeeeeeee...',
+  'I want to adopt all bunnies!',
+  'cute cuteee.',
+  'uwu fluffyyyyyyy!!!',
+];
+
 exports.reactionTexts = {
   alone: {
     idc: 'dun care...',

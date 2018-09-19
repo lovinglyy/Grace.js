@@ -34,9 +34,12 @@ const commands = {
 
   DP: (msg, grace) => utilities.dp(msg, grace),
   GUILDINFO: msg => utilities.guildInfo(msg),
+  SELF: (msg, grace) => utilities.self(msg, grace),
 
   ASK: msg => fun.ask(msg),
   CAT: msg => fun.cat(msg),
+  DOG: msg => fun.dog(msg),
+  BUNNY: msg => fun.bunny(msg),
 
   PURGE: msg => moderation.purge(msg),
   BAN: msg => moderation.ban(msg),
@@ -49,6 +52,7 @@ const commands = {
   STARBOARD: (msg, grace) => management.starboard(msg, grace),
   RANKREWARD: (msg, grace) => management.rankReward(msg, grace),
   REWARDLIST: (msg, grace) => management.rewardList(msg, grace),
+  SELFASSIGN: (msg, grace) => management.selfAssign(msg, grace),
 
   LEADERBOARD: (msg, grace) => xp.leaderboard(msg, grace),
   RANK: (msg, grace) => xp.rank(msg, grace),
