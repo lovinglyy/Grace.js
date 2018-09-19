@@ -37,9 +37,6 @@ module.exports = async (msg, grace) => {
     return;
   }
 
-  console.log(role.name);
-  console.log(role.id);
-
   const exists = await redisClient.sismember(`guilds_selfassigns:${msg.guild.id}`, role.id);
   if (exists === 1) {
     redisClient.srem(`guilds_selfassigns:${msg.guild.id}`, role.id);
