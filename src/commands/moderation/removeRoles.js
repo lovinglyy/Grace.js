@@ -23,5 +23,6 @@ module.exports = (msg, grace) => {
     .then((member) => {
       msg.reply(`Cleared ${previousRoles - member.roles.size} role(s) from ${anotherMember.displayName}!! I hope they don't be sad.`)
         .catch(() => {});
-    });
+    })
+    .catch(() => {});
 };

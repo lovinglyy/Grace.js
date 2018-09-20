@@ -18,12 +18,12 @@ module.exports = class {
    */
   static addSongToQueue(song, songTitle, msg) {
     if (guildQueues[msg.guild.id]) {
-      if (guildQueues[msg.guild.id].length >= 15) return msg.reply('the guild playlist is full!');
+      if (guildQueues[msg.guild.id].length >= 15) return msg.reply('the guild playlist is full!').catch(() => {});
       guildQueues[msg.guild.id].push(`${song}${songTitle}`);
     } else {
       guildQueues[msg.guild.id] = [`${song}${songTitle}`];
     }
-    msg.channel.send(`Song **${songTitle}** added to the song queue!`);
+    msg.channel.send(`Song **${songTitle}** added to the song queue!`).catch(() => {});
     return true;
   }
 

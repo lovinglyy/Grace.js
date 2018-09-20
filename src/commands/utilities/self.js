@@ -47,11 +47,12 @@ module.exports = async (msg, grace) => {
   const exists = await redisClient.sismember(`guilds_selfassigns:${msg.guild.id}`, role.id);
   if (exists === 1) {
     if (msg.member.roles.get(role.id)) {
-      msg.member.roles.remove(role, 'removed self assign role');
+      msg.member.roles.remove(role, 'removed self assign role').catch(() => {});
       msg.channel.send(`Removed the role **${role.name}** from you.`)
         .catch(() => {});
     } else {
-      msg.member.roles.add(role, 'from self assign roles');
+      msg.member.roles.add(role, 'from self assign roles')
+        .catch(() => {});
       msg.channel.send(`You got the role **${role.name}**.`)
         .catch(() => {});
     }

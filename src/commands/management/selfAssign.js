@@ -8,12 +8,12 @@ module.exports = async (msg, grace) => {
   const selfAssignCD = new Cooldown({ key: msg.guild.id, obj: 'selfAssign' });
 
   if (selfAssignCD.exists()) {
-    msg.reply('this guild has a cooldown for this command :c - please wait a while.');
+    msg.reply('this guild has a cooldown for this command :c - please wait a while.').catch(() => {});
     return;
   }
 
   if (!singleArgument) {
-    msg.reply('please specify a role, with a mention or with the name.');
+    msg.reply('please specify a role, with a mention or with the name.').catch(() => {});
     return;
   }
 

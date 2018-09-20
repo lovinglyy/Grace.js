@@ -20,7 +20,7 @@ module.exports = class {
       const timeLeft = ((messageReaction.message.createdTimestamp) - 55000) - Date.now();
       if (timeLeft < 1) return;
 
-      const starboardChannelID = await this.redisClient.hget(`guild: ${msg.guild}`, 'starboardChannel');
+      const starboardChannelID = await this.redisClient.hget(`guild: ${msg.guild.id}`, 'starboardChannel');
       if (!starboardChannelID) return;
       this.waitForStars(timeLeft + 5000, msg, starboardChannelID);
     });
@@ -34,7 +34,7 @@ module.exports = class {
 
       const channel = msg.guild.channels.resolve(starboardChannelID);
       if (!channel || channel.type !== 'text' || !channel.permissionsFor(msg.guild.me).has('SEND_MESSAGES')) {
-        this.redisClient.del(`guild: ${msg.guild}`, 'starboardChannel');
+        this.redisClient.del(`guild: ${msg.guild.id}`, 'starboardChannel');
         return;
       }
       const content = (msg.content.length < 1000) ? msg.content : `${msg.content.substring(999)}...`;
