@@ -4,8 +4,8 @@ module.exports = (msg) => {
     return;
   }
   if (Math.random() > 0.48) {
-    msg.reply('I say yes!');
+    msg.reply('I say yes!').catch(() => {});
   } else {
-    msg.reply('No!');
+    msg.reply('No!').catch(() => {});
   }
 };

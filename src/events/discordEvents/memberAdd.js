@@ -31,7 +31,9 @@ module.exports = class {
         return;
       }
 
-      channel.send(welcomeMsg.replace(/\[MEMBER\]/g, member));
+      channel.send(welcomeMsg.replace(/\[MEMBER\]/g, member)).catch(() => {
+        this.redisClient.hdel(`guild:${member.guild.id}`, 'welcome', 'welcomeChannel');
+      });
     });
   }
 };

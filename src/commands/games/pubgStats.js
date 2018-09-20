@@ -14,7 +14,7 @@ module.exports = async (msg, grace) => {
   const pubgCD = new Cooldown({ key: msg.author.id, obj: 'pubgCD' });
 
   if (pubgCD.exists()) {
-    msg.reply('this command is on cooldown!!');
+    msg.reply('this command is on cooldown!!').catch(() => {});
     return;
   }
 
@@ -27,13 +27,14 @@ module.exports = async (msg, grace) => {
   pubgCD.set(1, 20);
   const stats = await pugbAPI.getPlayer();
   if (!(stats.data) || !(stats.data[0])) {
-    msg.reply('couldn\'t find data for that player.');
+    msg.reply('couldn\'t find data for that player.').catch(() => {});
     return;
   }
   const playerSeason = await pugbAPI.getPlayerSeasonInfo(stats.data[0].id);
   if (!playerSeason) {
-    msg.reply('couldn\'t find this season data for that player.');
+    msg.reply('couldn\'t find this season data for that player.').catch(() => {});
     return;
   }
-  msg.channel.send(`${stats.data[0].attributes.name}'s info:`, { embed: playerSeason });
+  msg.channel.send(`${stats.data[0].attributes.name}'s info:`, { embed: playerSeason })
+    .catch(() => {});
 };

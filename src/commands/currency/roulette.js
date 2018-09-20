@@ -6,19 +6,19 @@ module.exports = async (msg, grace) => {
   const currencyCD = new Cooldown({ key: msg.author.id, obj: 'currency' });
 
   if (currencyCD.exists()) {
-    msg.reply('currency commands in cooldown!! :3');
+    msg.reply('currency commands in cooldown!! :3').catch(() => {});
     return;
   }
 
   const singleArgument = DiscordUtil.getSingleArg(msg);
   if (!singleArgument) {
-    msg.reply('you need to specify a bet amount.');
+    msg.reply('you need to specify a bet amount.').catch(() => {});
     return;
   }
 
   const bet = Number(singleArgument) << 0;
   if (Number.isNaN(bet) || bet < 10 || bet > 50) {
-    msg.reply('please specify a bet amount from 10 up to 50 blossoms.');
+    msg.reply('please specify a bet amount from 10 up to 50 blossoms.').catch(() => {});
     return;
   }
 
@@ -34,11 +34,13 @@ module.exports = async (msg, grace) => {
   userBlossoms = (userBlossoms) ? Number(userBlossoms) : 0;
 
   if (userBlossoms < bet) {
-    msg.reply('you don\'t have that amount to bet.');
+    msg.reply('you don\'t have that amount to bet.')
+      .catch(() => {});
     return;
   }
 
   const newBlossomAmount = (userBlossoms + winAmount) << 0;
   redisClient.hincrby(`user:${msg.author.id}`, 'userBlossoms', Math.floor(winAmount));
-  msg.channel.send(`${msg.author}, your roulette: **${rouletteRnd}**, you got **${winAmount << 0}** 🌼! *Total in bank: ${newBlossomAmount}*.`);
+  msg.channel.send(`${msg.author}, your roulette: **${rouletteRnd}**, you got **${winAmount << 0}** 🌼! *Total in bank: ${newBlossomAmount}*.`)
+    .catch(() => {});
 };

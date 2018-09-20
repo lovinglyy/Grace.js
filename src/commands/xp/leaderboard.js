@@ -19,7 +19,7 @@ module.exports = async (msg, grace) => {
     guildLeaderboard = await grace.getRedisClient().zrevrange(`guildxp:${msg.guild.id}`, 0, 10, 'WITHSCORES')
       .catch(() => null);
     if (!guildLeaderboard || guildLeaderboard.length < 1) {
-      msg.reply('the guild leaderboard is empty!');
+      msg.reply('the guild leaderboard is empty!').catch(() => {});
       return;
     }
     for (let i = 0; i < guildLeaderboard.length; i += 2) {
@@ -35,5 +35,5 @@ module.exports = async (msg, grace) => {
     .setDescription(leaderboardDisplay)
     .setFooter('The list is refreshed periodically.');
 
-  msg.channel.send('Be active to increase your xp! :3', { embed });
+  msg.channel.send('Be active to increase your xp! :3', { embed }).catch(() => {});
 };

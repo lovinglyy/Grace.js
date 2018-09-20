@@ -11,33 +11,33 @@ module.exports = async (msg, grace) => {
   const redisClient = grace.getRedisClient();
 
   if (!removeIndex || Number.isNaN(removeIndex)) {
-    msg.reply('type only the song number!');
+    msg.reply('type only the song number!').catch(() => {});
     return;
   }
   if (removeIndex < 1 || removeIndex > 15) {
-    msg.reply('tell me a valid song number!');
+    msg.reply('tell me a valid song number!').catch(() => {});
     return;
   }
 
   const userPlaylist = await redisClient.hget(`user:${msg.author.id}`, 'userPlaylist');
 
   if (!userPlaylist) {
-    msg.reply('you don\'t have a playlist!');
+    msg.reply('you don\'t have a playlist!').catch(() => {});
     return;
   }
 
   if (userPlaylist.split('!SID').length - 1 < removeIndex) {
-    msg.reply('invalid song number specified.');
+    msg.reply('invalid song number specified.').catch(() => {});
     return;
   }
 
   const song = Music.findSongByIndex(userPlaylist, removeIndex);
   if (!song) {
-    msg.reply('that song number isn\'t in your playlist.');
+    msg.reply('that song number isn\'t in your playlist.').catch(() => {});
     return;
   }
 
   const newPlaylist = userPlaylist.replace(`${song}!SID`, '');
   redisClient.hset(`user:${msg.author.id}`, 'userPlaylist', newPlaylist);
-  msg.channel.send('Song removed from the playlist!');
+  msg.channel.send('Song removed from the playlist!').catch(() => {});
 };

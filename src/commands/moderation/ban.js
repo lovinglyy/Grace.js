@@ -1,14 +1,25 @@
 const DiscordUtil = require('./../../util/DiscordUtil');
 
 module.exports = (msg) => {
-  if (!msg.member.hasPermission('BAN_MEMBERS')) return false;
-  if (msg.guild.me.hasPermission('BAN_MEMBERS') === false) return msg.reply('I need the ban members permission for that command.');
+  if (!msg.member.hasPermission('BAN_MEMBERS')) return;
+  if (msg.guild.me.hasPermission('BAN_MEMBERS') === false) {
+    msg.reply('I need the ban members permission for that command.')
+      .catch(() => {});
+    return;
+  }
 
   const singleArgument = DiscordUtil.getSingleArg(msg);
   const mentionedUser = msg.mentions.members.first();
 
-  if (!mentionedUser) return msg.reply('you need to mention the user that will be banned.');
-  if (mentionedUser.bannable === false) return msg.reply('I can\'t ban that user! o-o');
+  if (!mentionedUser) {
+    msg.reply('you need to mention the user that will be banned.').catch(() => {});
+    return;
+  }
+
+  if (mentionedUser.bannable === false) {
+    msg.reply('I can\'t ban that user! o-o').catch(() => {});
+    return;
+  }
 
   let banReason = 'Unspecified reason.';
   let daysToDelete = 0;
@@ -22,9 +33,13 @@ module.exports = (msg) => {
     banReason = singleArgument.substring(quotMarkIndex + 1, anotherQuotMarkIndex);
   }
 
-  if (Number.isNaN(daysToDelete)) return msg.reply('the number of days doesn\'t look valid!');
+  if (Number.isNaN(daysToDelete)) {
+    msg.reply('the number of days doesn\'t look valid!').catch(() => {});
+    return;
+  }
 
-  return mentionedUser.ban({ days: daysToDelete, reason: banReason })
-    .then(() => msg.channel.send(`${msg.author} banned ${mentionedUser} from the server! \n**Reason:** *${banReason}*.`))
-    .catch(() => msg.reply('I couldn\'t ban that user!'));
+  mentionedUser.ban({ days: daysToDelete, reason: banReason })
+    .then(() => msg.channel.send(`${msg.author} banned ${mentionedUser} from the server! \n**Reason:** *${banReason}*.`)
+      .catch(() => {}))
+    .catch(() => msg.reply('I couldn\'t ban that user!').catch(() => {}));
 };

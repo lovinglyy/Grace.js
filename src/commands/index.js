@@ -35,6 +35,7 @@ const commands = {
   DP: (msg, grace) => utilities.dp(msg, grace),
   GUILDINFO: msg => utilities.guildInfo(msg),
   SELF: (msg, grace) => utilities.self(msg, grace),
+  HELP: msg => utilities.help(msg),
 
   ASK: msg => fun.ask(msg),
   CAT: msg => fun.cat(msg),

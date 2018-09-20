@@ -20,20 +20,23 @@ module.exports = class {
       const timeLeft = ((messageReaction.message.createdTimestamp) - 55000) - Date.now();
       if (timeLeft < 1) return;
 
-      this.waitForStars(timeLeft + 5000, msg);
+      const starboardChannelID = await this.redisClient.hget(`guild: ${msg.guild}`, 'starboardChannel');
+      if (!starboardChannelID) return;
+      this.waitForStars(timeLeft + 5000, msg, starboardChannelID);
     });
   }
 
-  waitForStars(time, msg) {
+  waitForStars(time, msg, starboardChannelID) {
     setTimeout(async () => {
       this.waitList.splice(this.waitList.indexOf(msg.id), 1);
       const totalStars = msg.reactions.filter(r => r.emoji.name === '⭐').size;
       if (totalStars < 3) return;
-      const starboardChannelID = await this.redisClient.hget(`guild: ${msg.guild}`, 'starboardChannel');
-      if (!starboardChannelID) return;
 
       const channel = msg.guild.channels.resolve(starboardChannelID);
-      if (!channel || channel.type !== 'text' || !channel.permissionsFor(msg.guild.me).has('SEND_MESSAGES')) return;
+      if (!channel || channel.type !== 'text' || !channel.permissionsFor(msg.guild.me).has('SEND_MESSAGES')) {
+        this.redisClient.del(`guild: ${msg.guild}`, 'starboardChannel');
+        return;
+      }
       const content = (msg.content.length < 1000) ? msg.content : `${msg.content.substring(999)}...`;
       const starEmbed = new MessageEmbed()
         .setTitle(`${totalStars} ⭐`)
@@ -43,7 +46,7 @@ module.exports = class {
         .setAuthor(`${msg.member.displayName}'s message starred`);
       if (content) starEmbed.addField('Content', content);
       if (msg.attachments.first()) starEmbed.setImage(msg.attachments.first().url);
-      channel.send({ embed: starEmbed });
+      channel.send({ embed: starEmbed }).catch(() => {});
     }, time);
   }
 };

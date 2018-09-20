@@ -7,12 +7,13 @@ module.exports = async (msg, grace, type, mentionRequired = false) => {
   if (!mentionRequired) reactionContent = `${msg.author} ${reactionTexts.alone[type]}`;
   const anotherMember = DiscordUtil.findOneMember(msg, grace, false);
   if (mentionRequired && !anotherMember) {
-    msg.reply('you need to mention someone!!');
+    msg.reply('you need to mention someone!!').catch(() => {});
     return;
   }
   if (anotherMember) {
     if (anotherMember.id === msg.author.id) {
-      msg.reply(`don't be sad ${msg.author}, you can mention me while you don't make friends here. :3`);
+      msg.reply(`don't be sad ${msg.author}, you can mention me while you don't make friends here. :3`)
+        .catch(() => {});
       return;
     }
     if (type === 'idc') {
@@ -35,5 +36,5 @@ module.exports = async (msg, grace, type, mentionRequired = false) => {
     .setDescription(reactionContent)
     .setImage(gifs[type][(Math.random() * (gifs[type].length)) << 0])
     .setColor(11529967);
-  msg.channel.send({ embed });
+  msg.channel.send({ embed }).catch(() => {});
 };

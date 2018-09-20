@@ -14,7 +14,7 @@ module.exports = async (msg, grace) => {
   if (!showList) {
     const rewardList = await redisClient.hgetall(`guildrankrewards:${msg.guild.id}`);
     if (!rewardList || Object.keys(rewardList).length === 0) {
-      msg.reply('this guild has no rank rewards.');
+      msg.reply('this guild has no rank rewards.').catch(() => {});
       return;
     }
 
@@ -31,5 +31,5 @@ module.exports = async (msg, grace) => {
     .setDescription(showList)
     .setColor(11529967)
     .setFooter('The list is refreshed periodically.');
-  msg.channel.send('Showing the rank reward list.', { embed });
+  msg.channel.send('Showing the rank reward list.', { embed }).catch(() => {});
 };
