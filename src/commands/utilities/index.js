@@ -1,5 +1,5 @@
 const dp = require('./dp');
-const guildInfo = require('./guildInfo');
+const info = require('./info');
 const self = require('./self');
 
-module.exports = { dp, guildInfo, self };
+module.exports = { dp, info, self };

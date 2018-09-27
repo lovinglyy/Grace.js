@@ -33,7 +33,7 @@ const commands = {
   PUBGSTATS: (msg, grace) => games.pubgStats(msg, grace),
 
   DP: (msg, grace) => utilities.dp(msg, grace),
-  GUILDINFO: msg => utilities.guildInfo(msg),
+  INFO: msg => utilities.info(msg),
   SELF: (msg, grace) => utilities.self(msg, grace),
 
   ASK: msg => fun.ask(msg),
