@@ -34,5 +34,5 @@ module.exports = (msg) => {
   It also has **${msg.guild.emojis.size} emojis**, and is "located" in **${msg.guild.region}**.`)
     .setColor(11529967)
     .setThumbnail(msg.guild.iconURL({ size: 256 }));
-  msg.channel.send(embed).catch(() => {});
+  return msg.channel.send(embed).catch(() => {});
 };
