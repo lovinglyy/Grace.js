@@ -1,3 +1,37 @@
+exports.help = [`\`\`\`
+Currency\n-Bank: show how many blossoms you have.\n-Daily: Get your daily blossoms.
+-Roulette <amount>: bet from 10 to 50 blossoms in the roullete.
+\nFun\nAsk <question>: ask me something!\nBunny/Dog/Cat: show cute pets.
+\nGames\n-pubgstats <user>: show pubg stats for someone(current season).
+\nManagement\n-Defaultrole <role mentioned/name>: Set the default role in a server. [Administrator]
+-Rankreward <level> <@role or rolename> or Rankreward <remove/clear>: Set a role to be given when a member gets in that level. [Manage Roles]
+-Rewardlist: List the rank reward roles.
+-Rolebeautify <mention from 3 to 5 roles or their names>: Make these roles get pretty colors! [Manage Roles]
+-Selfassign <@role or rolename>: Make a role be self assignable or remove it from being self assignable(by using the command again). [Manage Roles]
+-Setwelcome <msg>: Set a welcome message for the server, in that channel, [MEMBER] will be replaced by the member mention.
+-Starboard: Set the starboard channel.
+\nModeration\n-Ban <@member>: basically bans a member. [Ban Members]
+-Kick <@member>: Kick a member. [Kick Members]
+-Purge <amount>: Remove x messages from the channel. [Manage Messages]
+-Removeroles <@member/member name/username/id>: Remove all roles from a member. [Manage Roles]\`\`\``,
+`\`\`\`
+Music\n-Myplaylist: Show your song playlist.
+-Play <youtube song name/link>: play a song or add it to the guild queue.
+-PlaylistAdd <youtube song name/link>: Add a song to your personal playlist.
+-PlaylistClear: Clear your personal playlist.
+-PlaylistRemove <x>: Remove a song from your playlist using that song index(from myplaylist).
+-Queue: Show the guild song queue.
+\nOwner\n-Botmessage <"title"> <message>: Say a message like if you was me. [Owner]
+-Setxp <amount>: Set the xp amount for a user. [Owner]
+\nReactions\n-Hug/Angry/Positive/Charm/Poke/Ew <@mention/name/username/id of another member if possible>: React with a gif.
+\nUtilities\n-dp <@mention/name/username/id>: shows a user Discord profile picture.
+-Guildinfo: Show the information of the guild from this command was sent.
+-Self <@role or rolename>: Assign or remove a self assign role from you.
+\nXP\n-Leaderboard: XP rank for a guild.\n-Rank: Your rank in the guild.\`\`\`
+\nYou can see all my commands above!
+Like the project? Give me a ⭐ on Github! **Yes**, my labs are open source. <https://github.com/lovinglyy/Grace.js>
+Have a great day :3`];
+
 exports.palletes = [
   [{ name: 'Chocolate Sunset', colors: ['#BF8777', '#7F5A4F', '#FFB49E', '#402D28', '#E5A28F'] }],
   [{ name: 'Angry Blossom', colors: ['#6FBF83', '#4A7F58', '#93FFAF', '#25402C', '#85E59E'] }],

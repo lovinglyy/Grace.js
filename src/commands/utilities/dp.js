@@ -9,5 +9,5 @@ module.exports = (msg, grace) => {
   const anotherMember = DiscordUtil.findOneMember(msg, grace);
   if (!anotherMember) return;
   msg.channel.send(`There is!! **${anotherMember.displayName}'s** Discord profile picture:\n
-${anotherMember.user.displayAvatarURL({ size: 2048 })}`);
+${anotherMember.user.displayAvatarURL({ size: 2048 })}`).catch(() => {});
 };

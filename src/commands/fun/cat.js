@@ -7,8 +7,10 @@ module.exports = async (msg) => {
   })
     .catch(() => null);
   if (!search || !search.url) {
-    msg.reply('a problem occurred in the cat factory.');
+    msg.reply('a problem occurred in the cat factory.')
+      .catch(() => {});
     return;
   }
-  msg.reply(`${cuteCatMessages[(Math.random() * (cuteCatMessages.length)) << 0]}\n${search.url}`);
+  msg.reply(`${cuteCatMessages[(Math.random() * (cuteCatMessages.length)) << 0]}\n${search.url}`)
+    .catch(() => {});
 };

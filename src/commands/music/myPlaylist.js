@@ -6,7 +6,7 @@
 module.exports = async (msg, grace) => {
   const userPlaylist = await grace.getRedisClient().hget(`user:${msg.author.id}`, 'userPlaylist');
   if (!userPlaylist || userPlaylist.length < 1) {
-    msg.reply('you don\'t have a playlist!');
+    msg.reply('you don\'t have a playlist!').catch(() => {});
     return;
   }
 
@@ -24,5 +24,5 @@ module.exports = async (msg, grace) => {
     color: 11529967,
     description: formatedSongs.substring(0, 1500),
   };
-  msg.channel.send('Your playlist!', { embed });
+  msg.channel.send('Your playlist!', { embed }).catch(() => {});
 };

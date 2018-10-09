@@ -72,7 +72,7 @@ class Music {
     if (songToSearch) {
       const searchResults = await this.searchYoutubeSong(msg, ytAPI, songToSearch);
       if (!searchResults) {
-        msg.reply('song not found or the duration is not short.');
+        msg.reply('song not found or the duration is not short.').catch(() => {});
         return false;
       }
       return searchResults;
@@ -81,19 +81,19 @@ class Music {
     if (Number(singleArgument)) {
       const songNumber = Number(singleArgument) << 0;
       if (songNumber < 1 || songNumber > 15) {
-        msg.reply('the song number doesn\'t look valid.');
+        msg.reply('the song number doesn\'t look valid.').catch(() => {});
         return false;
       }
 
       const userPlaylist = await asyncRedis.hget(`user: ${msg.author.id}`, 'userPlaylist');
       if (!userPlaylist) {
-        msg.reply('that song number isn\'t in your playlist.');
+        msg.reply('that song number isn\'t in your playlist.').catch(() => {});
         return false;
       }
 
       const song = this.findSongByIndex(userPlaylist, songNumber);
       if (!song) {
-        msg.reply('that song number isn\'t in your playlist.');
+        msg.reply('that song number isn\'t in your playlist.').catch(() => {});
         return false;
       }
 

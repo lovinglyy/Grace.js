@@ -5,5 +5,5 @@
 */
 module.exports = async (msg, grace) => {
   grace.getRedisClient().del(`user:${msg.author.id}`, 'userPlaylist');
-  msg.channel.send('I did clear your playlist! :o');
+  msg.channel.send('I did clear your playlist! :o').catch(() => {});
 };

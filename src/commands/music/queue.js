@@ -11,13 +11,13 @@ module.exports = async (msg) => {
   const singleArgument = DiscordUtil.getSingleArg(msg);
 
   if (!guildQueue) {
-    msg.reply('the guild playlist is empty!! owo');
+    msg.reply('the guild playlist is empty!! owo').catch(() => {});
     return;
   }
 
   if (singleArgument && singleArgument === 'clear' && msg.member.hasPermission('MANAGE_MESSAGES')) {
     GuildQueues.clearQueue(msg.guild.id);
-    msg.reply('the guild queue is now empty! :3');
+    msg.reply('the guild queue is now empty! :3').catch(() => {});
     return;
   }
 
@@ -32,5 +32,5 @@ module.exports = async (msg) => {
     .setDescription(formatedSongs.substring(0, 1500))
     .setColor(11529967)
     .setThumbnail(msg.guild.iconURL({ size: 64 }));
-  msg.channel.send({ embed });
+  msg.channel.send({ embed }).catch(() => {});
 };

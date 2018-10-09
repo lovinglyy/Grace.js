@@ -13,5 +13,5 @@ module.exports = (msg, grace) => {
     .setTitle('Set XP')
     .setDescription(`${msg.member.displayName}'s xp is now ${singleArgument}.`)
     .setColor(11529967);
-  msg.channel.send({ embed });
+  msg.channel.send({ embed }).catch(() => {});
 };

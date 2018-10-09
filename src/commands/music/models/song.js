@@ -17,7 +17,7 @@ module.exports = class {
       .setColor(11529967)
       .setThumbnail(`https://img.youtube.com/vi/${this.id}/hqdefault.jpg`)
       .setAuthor('Song playing now');
-    this.channel.send(embed);
+    this.channel.send(embed).catch(() => {});
   }
 
   /**

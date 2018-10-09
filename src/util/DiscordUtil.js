@@ -23,7 +23,7 @@ class DiscordUtil {
       .setDescription(text)
       .setColor(11529967)
       .setThumbnail(msg.guild.me.user.displayAvatarURL({ size: 256 }));
-    msg.channel.send(content, { embed });
+    msg.channel.send(content, { embed }).catch(() => {});
   }
 
   /**
@@ -50,7 +50,7 @@ class DiscordUtil {
     if (resolveMember) return resolveMember;
 
     if (search.length < 3 || search.length > 16) {
-      if (errorReply === true) msg.channel.send(`${msg.author}, sorry but I couldn't find the specified member :c`);
+      if (errorReply === true) msg.channel.send(`${msg.author}, sorry but I couldn't find the specified member :c`).catch(() => {});
       return false;
     }
 
@@ -67,7 +67,7 @@ class DiscordUtil {
     if (usernameSearch) return usernameSearch;
 
     if (similarMembers.length === 0) {
-      if (errorReply === true) msg.channel.send(`${msg.author}, sorry but I couldn't find the specified member :c`);
+      if (errorReply === true) msg.channel.send(`${msg.author}, sorry but I couldn't find the specified member :c`).catch(() => {});
       return false;
     }
 
@@ -101,7 +101,7 @@ class DiscordUtil {
     if (!possibleMember) {
       const singleArgument = this.getSingleArg(msg);
       if (!singleArgument) {
-        if (errorReply === true) msg.reply('please mention a user or type a username/display name ^^');
+        if (errorReply === true) msg.reply('please mention a user or type a username/display name ^^').catch(() => {});
         return false;
       }
       possibleMember = this.getMember(singleArgument.toUpperCase(), msg, errorReply);

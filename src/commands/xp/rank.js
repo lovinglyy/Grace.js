@@ -20,7 +20,7 @@ module.exports = async (msg, grace) => {
     .catch(() => null);
 
   if (!memberInfo) {
-    msg.reply('you\'re not in the guild xp rank!');
+    msg.reply('you\'re not in the guild xp rank!').catch(() => {});
     return;
   }
 
@@ -36,5 +36,5 @@ module.exports = async (msg, grace) => {
     .setColor(11529967)
     .setDescription(memberRank);
 
-  msg.channel.send('🌸 ~', { embed });
+  msg.channel.send('🌸 ~', { embed }).catch(() => {});
 };

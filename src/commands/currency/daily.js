@@ -3,7 +3,8 @@ const dailyCD = new Map();
 module.exports = (msg, grace) => {
   const CD = dailyCD.get(msg.author.id);
   if (CD && Date.now() < CD) {
-    msg.reply('you already got your dailies today, huh!');
+    msg.reply('you already got your dailies today, huh!')
+      .catch(() => {});
     return;
   }
 
@@ -13,5 +14,6 @@ module.exports = (msg, grace) => {
   dailyCD.set(msg.author.id, tomorrow.getTime());
 
   grace.getRedisClient().hincrby(`user:${msg.author.id}`, 'userBlossoms', rndBlossoms);
-  msg.reply(`you got **${rndBlossoms}** 🌼 ^^`);
+  msg.reply(`you got **${rndBlossoms}** 🌼 ^^`)
+    .catch(() => {});
 };
